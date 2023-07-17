@@ -6,28 +6,28 @@ type Props = {
 };
 
 export const OpenGraphHead = ({ title, description }: Props) => {
+  // pages/_document.tsx のHead要素へprefixを追加してください。
+  // 例：<Head prefix="og: https://ogp.me/ns# website: https://ogp.me/ns/website#">
   return (
     <Head>
       <title>{title}</title>
 
-      <div prefix="og: https://ogp.me/ns# website: https://ogp.me/ns/website#">
-        <meta property="og:title" content={title} />
-        <meta
-          property="og:image"
-          content="https://raw.githubusercontent.com/yu-ko-ba/non-drawing-probability-calculator/main/public/icons/maskable_icon_x192.png"
-        />
+      <meta property="og:title" content={title} />
+      <meta
+        property="og:image"
+        content="https://raw.githubusercontent.com/yu-ko-ba/non-drawing-probability-calculator/main/public/icons/maskable_icon_x192.png"
+      />
 
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@yu_ko_ba" />
-        <meta name="twitter:creator" content="@yu_ko_ba" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@yu_ko_ba" />
+      <meta name="twitter:creator" content="@yu_ko_ba" />
 
-        {description && (
-          <>
-            <meta property="og:description" content={description} />
-            <meta name="twitter:description" content={description} />
-          </>
-        )}
-      </div>
+      {description && (
+        <>
+          <meta property="og:description" content={description} />
+          <meta name="twitter:description" content={description} />
+        </>
+      )}
     </Head>
   );
 };

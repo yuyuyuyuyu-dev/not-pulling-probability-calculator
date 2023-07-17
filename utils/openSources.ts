@@ -55,6 +55,12 @@ export const openSources: OSS[] = [
       "https://raw.githubusercontent.com/vercel/next.js/canary/license.md",
   },
   {
+    name: "next-pwa",
+    github: "https://github.com/shadowwalker/next-pwa",
+    licenseUrl:
+      "https://raw.githubusercontent.com/shadowwalker/next-pwa/master/LICENSE",
+  },
+  {
     name: "React",
     website: "https://react.dev",
     github: "https://github.com/facebook/react",
