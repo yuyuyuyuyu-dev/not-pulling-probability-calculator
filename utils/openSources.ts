@@ -6,6 +6,14 @@ type OSS = {
 };
 
 export const openSources: OSS[] = [
+  // Font
+  {
+    name: "Yomogi",
+    website: "https://fonts.google.com/specimen/Yomogi",
+    github: "https://github.com/satsuyako/YomogiFont",
+    licenseUrl:
+      "https://raw.githubusercontent.com/satsuyako/YomogiFont/ver3.00/OFL.txt",
+  },
   // dependencies
   {
     name: "Emotion",
@@ -18,7 +26,8 @@ export const openSources: OSS[] = [
     name: "MUI Core",
     website: "https://mui.com/core/",
     github: "https://github.com/mui/material-ui",
-    licenseUrl: "https://raw.githubusercontent.com/mui/material-ui/master/LICENSE",
+    licenseUrl:
+      "https://raw.githubusercontent.com/mui/material-ui/master/LICENSE",
   },
   {
     name: "Definitely Typed",
