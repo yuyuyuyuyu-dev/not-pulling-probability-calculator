@@ -3,7 +3,7 @@ import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import React from "react";
 
 export const NextMuiLink = (props: NextLinkProps & MuiLinkProps) => {
-  // Next.jsのLink経由でMUIのLinkにhref渡すようにしたいから {...props} 使ってない
+  // Next.jsのLink経由でMUIのLinkにhref渡すようにしたいので {...props} は使用していません
   return (
     <NextLink href={props.href} passHref legacyBehavior>
       <MuiLink
