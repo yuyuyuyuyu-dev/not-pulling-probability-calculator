@@ -51,7 +51,10 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 export default function OpenSources({ openSources }: Props) {
   return (
     <Container maxWidth="md">
-      <OpenGraphHead title="オープンソース" />
+      <OpenGraphHead
+        title="オープンソース"
+        description="本アプリで使用しているOSSに関する情報です。"
+      />
       <Stack spacing={2}>
         <Box />
         {openSources

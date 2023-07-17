@@ -10,7 +10,10 @@ export default function Home() {
 
   return (
     <Container maxWidth="xs">
-      <OpenGraphHead title="引けない確率の計算" />
+      <OpenGraphHead
+        title="引けない確率の計算"
+        description="1度も引けない確率を計算するWebアプリです。"
+      />
       <Stack spacing={2}>
         <div />
         <TextField
