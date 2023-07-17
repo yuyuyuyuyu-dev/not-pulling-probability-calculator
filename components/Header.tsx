@@ -58,6 +58,20 @@ export const Header = () => {
               }}
             >
               <NextMuiLink
+                href="https://github.com/yu-ko-ba/non-drawing-probability-calculator"
+                color="inherit"
+                underline="hover"
+              >
+                ソースコード
+              </NextMuiLink>
+            </MenuItem>
+            <Divider />
+            <MenuItem
+              onClick={() => {
+                setAnchorEl(null);
+              }}
+            >
+              <NextMuiLink
                 href="/open-sources"
                 color="inherit"
                 underline="hover"
