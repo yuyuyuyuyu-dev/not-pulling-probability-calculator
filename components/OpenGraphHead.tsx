@@ -15,7 +15,7 @@ export const OpenGraphHead = ({ title, description }: Props) => {
       <meta property="og:title" content={title} />
       <meta
         property="og:image"
-        content="https://raw.githubusercontent.com/yu-ko-ba/non-drawing-probability-calculator/main/public/maskable_icon_x192.png"
+        content="https://raw.githubusercontent.com/yu-ko-ba/non-drawing-probability-calculator/main/public/maskable_icon_x128.png"
       />
 
       <meta name="twitter:card" content="summary" />
