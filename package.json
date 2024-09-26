@@ -7,21 +7,27 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:non-drawing-probability-calculator": "node dist/non-drawing-probability-calculator/server/server.mjs"
+    "serve:ssr:non-drawing-probability-calculator": "node dist/non-drawing-probability-calculator/server/server.mjs",
+    "postinstall": "npx generate-third-party-licenses-json --out-file-path ./public/third-party-licenses.json",
+    "postuninstall": "npx generate-third-party-licenses-json --out-file-path ./public/third-party-licenses.json"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.2.0",
+    "@angular/cdk": "~18.2.6",
     "@angular/common": "^18.2.0",
     "@angular/compiler": "^18.2.0",
     "@angular/core": "^18.2.0",
     "@angular/forms": "^18.2.0",
+    "@angular/material": "~18.2.6",
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/platform-server": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.5",
+    "@fontsource/yomogi": "^5.1.0",
     "express": "^4.18.2",
+    "ngx-mat-third-party-licenses-list-view": "^0.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"

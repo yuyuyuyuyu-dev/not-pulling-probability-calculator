@@ -1,0 +1,44 @@
+<mat-toolbar>
+  <a id="title" routerLink="/">
+    @if (router.url === "/") {
+      {{ appName }}
+    } @else {
+      <button mat-button>
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    }
+  </a>
+  <span class="spacer"></span>
+  <div id="kebabMenuHolder">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </div>
+  <mat-menu #menu="matMenu">
+    <a mat-menu-item routerLink="third-party-licenses">
+      <span>サードパーティライセンス</span>
+    </a>
+    @if (repositoryUrl) {
+      <a
+        mat-menu-item
+        [href]="repositoryUrl"
+        target="_blank"
+        rel="noopner noreferrer"
+      >
+        <mat-icon>open_in_new</mat-icon>
+        <span>ソースコード</span>
+      </a>
+    }
+    @if (licenseUrl) {
+      <a
+        mat-menu-item
+        [href]="licenseUrl"
+        target="_blank"
+        rel="noopner noreferrer"
+      >
+        <mat-icon>open_in_new</mat-icon>
+        <span>ライセンス</span>
+      </a>
+    }
+  </mat-menu>
+</mat-toolbar>
