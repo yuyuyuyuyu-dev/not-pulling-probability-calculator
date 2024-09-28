@@ -1,0 +1,30 @@
+<main>
+  <form>
+    <mat-form-field class="full-width">
+      <mat-label>排出率（単位: %）</mat-label>
+      <input
+        type="number"
+        matInput
+        placeholder="例: 0.75"
+        (input)="onOddsInput($event)"
+      />
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>試行回数（単位: 回）</mat-label>
+      <input
+        type="number"
+        matInput
+        placeholder="例: 300"
+        (input)="onTimesInput($event)"
+      />
+    </mat-form-field>
+  </form>
+  <br />
+
+  <p>1度も引けない確率</p>
+  <p>約 {{ calcNonDrawingProbability(odds(), times()) }} %</p>
+  <br />
+  <p>少なくとも1回は引ける確率</p>
+  <p>約 {{ 100 - calcNonDrawingProbability(odds(), times()) }} %</p>
+</main>
