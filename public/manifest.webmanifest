@@ -1,7 +1,7 @@
 {
-  "name": "non-drawing-probability-calculator",
-  "short_name": "non-drawing-probability-calculator",
-  "theme_color": "#1976d2",
+  "name": "引けない確率の計算",
+  "short_name": "引けない確率の計算",
+  "theme_color": "#ba005c",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
