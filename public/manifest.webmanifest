@@ -1,7 +1,7 @@
 {
   "name": "引けない確率の計算",
   "short_name": "引けない確率の計算",
-  "theme_color": "#fed0cd",
+  "theme_color": "#fff8f8",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
