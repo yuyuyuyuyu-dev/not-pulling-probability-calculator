@@ -38,7 +38,7 @@ $non-drawing-probability-calculator-theme: mat.define-theme((
 @import "@fontsource/yomogi";
 
 * {
-  font-family: "Yomogi";
+  font-family: "Yomogi", Roboto, sans-serif;
 }
 
 html, body { height: 100%; }
