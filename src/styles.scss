@@ -10,7 +10,7 @@
 @include mat.core();
 
 // Define the theme object.
-$non-drawing-probability-calculator-theme: mat.define-theme((
+$light-theme: mat.define-theme((
   color: (
     theme-type: light,
     primary: mat.$rose-palette,
@@ -21,11 +21,28 @@ $non-drawing-probability-calculator-theme: mat.define-theme((
   ),
 ));
 
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$cyan-palette,
+    tertiary: mat.$orange-palette,
+  ),
+  density: (
+    scale: 0,
+  ),
+));
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 :root {
-  @include mat.all-component-themes($non-drawing-probability-calculator-theme);
+  @include mat.all-component-themes($light-theme);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include mat.all-component-themes($dark-theme);
+  }
 }
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.
@@ -50,7 +67,7 @@ main {
   margin: 0 auto;
 }
 
-main>* {
+main > * {
   width: 100%;
 }
 
