@@ -26,7 +26,7 @@
     "@angular/service-worker": "^18.2.0",
     "@fontsource/yomogi": "^5.1.0",
     "@yu-ko-ba/ngx-mat-my-simple-appbar": "^0.0.4",
-    "ngx-mat-third-party-licenses-list-view": "^0.0.6",
+    "ngx-mat-third-party-licenses-list-view": "^0.0.7",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
