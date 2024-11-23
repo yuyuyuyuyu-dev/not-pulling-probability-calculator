@@ -1,0 +1,23 @@
+<form>
+  <mat-form-field class="full-width">
+    <mat-label>排出率（単位: %）</mat-label>
+    <input
+      type="number"
+      matInput
+      placeholder="例: 0.75"
+      [formControl]="odds"
+      (input)="onChanged()"
+    />
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>試行回数（単位: 回）</mat-label>
+    <input
+      type="number"
+      matInput
+      placeholder="例: 300"
+      [formControl]="pulls"
+      (input)="onChanged()"
+    />
+  </mat-form-field>
+</form>

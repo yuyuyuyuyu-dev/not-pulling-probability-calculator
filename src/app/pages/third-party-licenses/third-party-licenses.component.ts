@@ -3,7 +3,7 @@ import {
   License,
   NgxMatThirdPartyLicensesListViewComponent,
 } from 'ngx-mat-third-party-licenses-list-view';
-import _licenses from '../../../public/third-party-licenses.json';
+import _licenses from '../../../../public/third-party-licenses.json';
 
 @Component({
   selector: 'app-third-party-licenses',
