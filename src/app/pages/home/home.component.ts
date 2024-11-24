@@ -5,11 +5,10 @@ import { InputValues } from '../../components/input-fields/types/InputValues';
 import { CalculateResultsComponent } from '../../components/calculate-results/calculate-results.component';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [InputFieldsComponent, CalculateResultsComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+    selector: 'app-home',
+    imports: [InputFieldsComponent, CalculateResultsComponent],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {
   notPulling = 100;
