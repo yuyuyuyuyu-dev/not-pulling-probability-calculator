@@ -5,10 +5,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { InputValues } from './types/InputValues';
 
 @Component({
-    selector: 'app-input-fields',
-    imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule],
-    templateUrl: './input-fields.component.html',
-    styleUrl: './input-fields.component.scss'
+  selector: 'app-input-fields',
+  standalone: true,
+  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+  templateUrl: './input-fields.component.html',
+  styleUrl: './input-fields.component.scss',
 })
 export class InputFieldsComponent {
   odds = new FormControl('');

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "non-drawing-probability-calculator": {
+    "not-pulling-probability-calculator": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -66,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "non-drawing-probability-calculator:build:production"
+              "buildTarget": "not-pulling-probability-calculator:build:production"
             },
             "development": {
-              "buildTarget": "non-drawing-probability-calculator:build:development"
+              "buildTarget": "not-pulling-probability-calculator:build:development"
             }
           },
           "defaultConfiguration": "development"

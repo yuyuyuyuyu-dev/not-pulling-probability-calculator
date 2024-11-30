@@ -4,6 +4,7 @@ import { NgxMatMySimpleAppbarComponent } from '@yu-ko-ba/ngx-mat-my-simple-appba
 
 @Component({
     selector: 'app-root',
+    standalone: true,
     imports: [RouterOutlet, NgxMatMySimpleAppbarComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Probability } from './types/NonDrawingProbability';
+import { Probability } from './types/Probability';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CalculateNonDrawingProbabilityService {
+export class CalculateNotPullingProbabilityService {
   calculate({ odds, pulls }: { odds: number; pulls: number }): Probability {
     const nonDrawing = (1 - odds / 100) ** pulls;
 

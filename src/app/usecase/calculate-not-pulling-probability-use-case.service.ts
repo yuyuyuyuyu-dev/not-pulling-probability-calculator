@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { CalculateNonDrawingProbabilityService } from '../../../models/calculate-non-drawing-probability.service';
-import { Probability } from '../../../models/types/NonDrawingProbability';
+import { CalculateNotPullingProbabilityService } from '../domain/calculate-not-pulling-probability.service';
+import { Probability } from '../domain/types/Probability';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CalculateNonDrawingProbabilityManagerService {
-  constructor(private service: CalculateNonDrawingProbabilityService) {}
+export class CalculateNotPullingProbabilityUseCaseService {
+  constructor(private service: CalculateNotPullingProbabilityService) {}
 
   calculate({
     odds,

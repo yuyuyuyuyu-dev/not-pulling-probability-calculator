@@ -1,25 +1,26 @@
 import { Component } from '@angular/core';
-import { CalculateNonDrawingProbabilityManagerService } from './managers/calculate-non-drawing-probability-manager.service';
+import { CalculateNotPullingProbabilityUseCaseService } from '../../../usecase/calculate-not-pulling-probability-use-case.service';
 import { InputFieldsComponent } from '../../components/input-fields/input-fields.component';
 import { InputValues } from '../../components/input-fields/types/InputValues';
 import { CalculateResultsComponent } from '../../components/calculate-results/calculate-results.component';
 
 @Component({
-    selector: 'app-home',
-    imports: [InputFieldsComponent, CalculateResultsComponent],
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.scss'
+  selector: 'app-home',
+  standalone: true,
+  imports: [InputFieldsComponent, CalculateResultsComponent],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss',
 })
 export class HomeComponent {
   notPulling = 100;
   pulling = 0;
 
   constructor(
-    private calculateManager: CalculateNonDrawingProbabilityManagerService,
+    private calculateUseCase: CalculateNotPullingProbabilityUseCaseService,
   ) {}
 
   onInputValueChanged(inputValues: InputValues) {
-    this.calculateManager.calculate({
+    this.calculateUseCase.calculate({
       odds: inputValues.odds,
       pulls: inputValues.pulls,
       onSucceed: (probability) => {
