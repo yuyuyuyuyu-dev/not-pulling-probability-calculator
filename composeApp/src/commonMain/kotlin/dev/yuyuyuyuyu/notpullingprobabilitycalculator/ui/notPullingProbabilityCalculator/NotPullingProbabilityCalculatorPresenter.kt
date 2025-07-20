@@ -2,10 +2,11 @@ package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityC
 
 import androidx.compose.runtime.Composable
 import com.slack.circuit.runtime.presenter.Presenter
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreen
 
 class NotPullingProbabilityCalculatorPresenter : Presenter<NotPullingProbabilityCalculatorScreen.State> {
     @Composable
     override fun present(): NotPullingProbabilityCalculatorScreen.State {
-        TODO("Not yet implemented")
+        return NotPullingProbabilityCalculatorScreen.State
     }
 }

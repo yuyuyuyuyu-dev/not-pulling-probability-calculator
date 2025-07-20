@@ -1,0 +1,7 @@
+package dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.notPullingProbabilityCalculator
+
+import androidx.compose.runtime.Composable
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator.SharedNotPullingProbabilityCalculator
+
+@Composable
+fun NotPullingProbabilityCalculator() = SharedNotPullingProbabilityCalculator()

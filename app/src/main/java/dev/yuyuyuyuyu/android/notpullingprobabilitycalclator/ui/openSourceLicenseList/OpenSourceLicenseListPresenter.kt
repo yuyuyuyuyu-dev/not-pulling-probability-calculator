@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.openSourceLicenseList
+package dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.openSourceLicenseList
 
 import androidx.compose.runtime.Composable
 import com.slack.circuit.runtime.presenter.Presenter
