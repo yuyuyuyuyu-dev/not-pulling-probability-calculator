@@ -18,4 +18,26 @@ class CalculateNotPullingProbabilityUseCaseTest {
 
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun `invoke returns 1_0 when odds are 0`() {
+        val odds = 0.0
+        val numberOfTrials = 149
+        val expected = Probability(notPulling = 1.0)
+
+        val actual = useCase(odds, numberOfTrials)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `invoke returns 0_0 when odds are 100`() {
+        val odds = 100.0
+        val numberOfTrials = 149
+        val expected = Probability(notPulling = 0.0)
+
+        val actual = useCase(odds, numberOfTrials)
+
+        assertEquals(expected, actual)
+    }
 }
