@@ -2,6 +2,4 @@ package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityC
 
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreen
 
-data object NotPullingProbabilityCalculatorScreenImpl : NotPullingProbabilityCalculatorScreen {
-//    data object State : CircuitUiState
-}
+data object NotPullingProbabilityCalculatorScreenImpl : NotPullingProbabilityCalculatorScreen

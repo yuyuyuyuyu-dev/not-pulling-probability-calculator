@@ -20,7 +20,9 @@ val uiModule = module {
                 )
             }
             .addPresenter<NotPullingProbabilityCalculatorScreenImpl, NotPullingProbabilityCalculatorScreen.State>(
-                presenter = NotPullingProbabilityCalculatorPresenter()
+                presenter = NotPullingProbabilityCalculatorPresenter(
+                    calculateNotPullingProbabilityUseCase = get(),
+                )
             )
 
             .addUi<OpenSourceLicenseListScreen, OpenSourceLicenseListScreen.State> { state, modifier ->
