@@ -1,22 +1,28 @@
 package dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.di
 
 import com.slack.circuit.foundation.Circuit
-import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculator
-import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorPresenter
-import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreen
+import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreenImpl
 import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.openSourceLicenseList.OpenSourceLicenseList
 import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.openSourceLicenseList.OpenSourceLicenseListPresenter
 import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.openSourceLicenseList.OpenSourceLicenseListScreen
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculator
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorPresenter
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreen
 import org.koin.dsl.module
 
 val uiModule = module {
     single {
         Circuit.Builder()
-            .addUi<NotPullingProbabilityCalculatorScreen, NotPullingProbabilityCalculatorScreen.State> { state, modifier ->
-                NotPullingProbabilityCalculator()
+            .addUi<NotPullingProbabilityCalculatorScreenImpl, NotPullingProbabilityCalculatorScreen.State> { state, modifier ->
+                NotPullingProbabilityCalculator(
+                    state = state,
+                    modifier = modifier,
+                )
             }
-            .addPresenter<NotPullingProbabilityCalculatorScreen, NotPullingProbabilityCalculatorScreen.State>(
-                presenter = NotPullingProbabilityCalculatorPresenter()
+            .addPresenter<NotPullingProbabilityCalculatorScreenImpl, NotPullingProbabilityCalculatorScreen.State>(
+                presenter = NotPullingProbabilityCalculatorPresenter(
+                    calculateNotPullingProbabilityUseCase = get(),
+                )
             )
 
             .addUi<OpenSourceLicenseListScreen, OpenSourceLicenseListScreen.State> { state, modifier ->

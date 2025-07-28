@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SharedNotPullingProbabilityCalculator(
+fun NotPullingProbabilityCalculator(
     state: NotPullingProbabilityCalculatorScreen.State,
     modifier: Modifier = Modifier,
 ) = Column(

@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityCalculator
+package dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -7,7 +7,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.slack.circuit.runtime.presenter.Presenter
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.domain.useCases.CalculateNotPullingProbabilityUseCase
-import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreen
 
 class NotPullingProbabilityCalculatorPresenter(
     private val calculateNotPullingProbabilityUseCase: CalculateNotPullingProbabilityUseCase,

@@ -1,0 +1,7 @@
+package dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.notPullingProbabilityCalculator
+
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreen
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data object NotPullingProbabilityCalculatorScreenImpl : NotPullingProbabilityCalculatorScreen
