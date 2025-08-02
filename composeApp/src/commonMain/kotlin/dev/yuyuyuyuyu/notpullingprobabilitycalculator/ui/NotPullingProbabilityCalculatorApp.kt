@@ -36,7 +36,6 @@ fun NotPullingProbabilityCalculatorApp() {
             modules(notPullingProbabilityCalculatorAppModule)
         },
     ) {
-        // TODO: アプリバーと本体で背景色が異なる原因を調べる
         MyMaterialTheme {
             Scaffold(
                 modifier = Modifier.clickable(

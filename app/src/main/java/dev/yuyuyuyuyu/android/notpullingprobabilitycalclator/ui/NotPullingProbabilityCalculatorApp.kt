@@ -13,7 +13,7 @@ import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreenImpl
 import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.openSourceLicenseList.OpenSourceLicenseListScreenImpl
-import dev.yuyuyuyuyu.mymaterialtheme.MyMaterialTheme
+import dev.yuyuyuyuyu.mymaterialtheme.MyMaterialDynamicTheme
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.openSourceLicenseList.OpenSourceLicenseListScreen
 import dev.yuyuyuyuyu.simpleTopAppBar.SimpleTopAppBar
 import org.koin.compose.koinInject
@@ -26,8 +26,7 @@ fun NotPullingProbabilityCalculatorApp() {
     val focusManager = LocalFocusManager.current
     val uriHandler = LocalUriHandler.current
 
-    // TODO: アプリバーと本体で背景色が異なる原因を調べる
-    MyMaterialTheme {
+    MyMaterialDynamicTheme {
         Scaffold(
             modifier = Modifier.clickable(
                 interactionSource = null,
