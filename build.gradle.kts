@@ -10,4 +10,6 @@ plugins {
 
     alias(libs.plugins.aboutLibraries) apply false
     alias(libs.plugins.kotlinAndroid) apply false
+
+    alias(libs.plugins.composePwa) apply false
 }
