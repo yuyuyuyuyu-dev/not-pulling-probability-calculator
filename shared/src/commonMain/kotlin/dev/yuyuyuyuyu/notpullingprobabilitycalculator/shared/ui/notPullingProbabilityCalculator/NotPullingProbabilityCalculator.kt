@@ -1,6 +1,8 @@
 package dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -10,6 +12,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -24,7 +28,8 @@ fun NotPullingProbabilityCalculator(
     var odds by rememberSaveable { mutableStateOf("") }
     var numberOfTrials by rememberSaveable { mutableStateOf("") }
 
-    // TODO: tabキーでカーソルを移動させる
+    val focusManager = LocalFocusManager.current
+
     TextField(
         value = odds,
         onValueChange = {
@@ -37,6 +42,8 @@ fun NotPullingProbabilityCalculator(
             )
         },
         label = { Text("排出率（単位：%）") },
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+        maxLines = 1,
     )
 
     Spacer(Modifier.height(16.dp))
@@ -53,6 +60,9 @@ fun NotPullingProbabilityCalculator(
             )
         },
         label = { Text("試行回数（単位：回）") },
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+        maxLines = 1,
     )
 
     Spacer(Modifier.height(48.dp))

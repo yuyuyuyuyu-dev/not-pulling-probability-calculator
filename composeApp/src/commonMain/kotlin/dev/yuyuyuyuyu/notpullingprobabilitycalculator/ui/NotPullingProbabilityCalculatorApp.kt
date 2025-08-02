@@ -1,9 +1,11 @@
 package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.CircuitCompositionLocals
@@ -25,6 +27,7 @@ fun NotPullingProbabilityCalculatorApp() {
     val backStack = rememberSaveableBackStack(root = NotPullingProbabilityCalculatorScreenImpl)
     val navigator = rememberCircuitNavigator(backStack) {}
 
+    val focusManager = LocalFocusManager.current
     val uriHandler = LocalUriHandler.current
 
     KoinApplication(
@@ -36,6 +39,11 @@ fun NotPullingProbabilityCalculatorApp() {
         // TODO: アプリバーと本体で背景色が異なる原因を調べる
         MyMaterialTheme {
             Scaffold(
+                modifier = Modifier.clickable(
+                    interactionSource = null,
+                    indication = null,
+                    onClick = { focusManager.clearFocus() },
+                ),
                 topBar = {
                     val currentScreen = backStack.topRecord?.screen
 
