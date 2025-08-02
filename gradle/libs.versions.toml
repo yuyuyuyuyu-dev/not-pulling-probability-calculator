@@ -26,7 +26,7 @@ simpleTopAppBar = "0.3.1"
 
 aboutLibraries = "12.2.4"
 
-composePwa = "0.2.0"
+composePwa = "0.2.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
