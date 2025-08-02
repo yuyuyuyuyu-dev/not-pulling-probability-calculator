@@ -1,0 +1,5 @@
+package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.openSourceLicenseList
+
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.openSourceLicenseList.OpenSourceLicenseListScreen
+
+object OpenSourceLicenseListScreenImpl : OpenSourceLicenseListScreen
