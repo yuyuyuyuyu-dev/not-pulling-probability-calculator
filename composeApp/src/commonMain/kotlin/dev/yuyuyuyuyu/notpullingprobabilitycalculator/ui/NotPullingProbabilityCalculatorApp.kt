@@ -11,8 +11,9 @@ import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import dev.yuyuyuyuyu.mymaterialtheme.MyMaterialTheme
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.di.notPullingProbabilityCalculatorAppModule
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.openSourceLicenseList.OpenSourceLicenseListScreen
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreenImpl
-import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.openSourceLicenseList.OpenSourceLicenseListScreen
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.openSourceLicenseList.OpenSourceLicenseListScreenImpl
 import dev.yuyuyuyuyu.simpleTopAppBar.SimpleTopAppBar
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
@@ -32,6 +33,7 @@ fun NotPullingProbabilityCalculatorApp() {
             modules(notPullingProbabilityCalculatorAppModule)
         },
     ) {
+        // TODO: アプリバーと本体で背景色が異なる原因を調べる
         MyMaterialTheme {
             Scaffold(
                 topBar = {
@@ -45,7 +47,7 @@ fun NotPullingProbabilityCalculatorApp() {
                         navigateBackIsPossible = backStack.size > 1,
                         onNavigateBackButtonClick = { navigator.pop() },
                         onOpenSourceLicensesButtonClick = {
-                            navigator.goTo(OpenSourceLicenseListScreen)
+                            navigator.goTo(OpenSourceLicenseListScreenImpl)
                         },
                         onSourceCodeButtonClick = {
                             uriHandler.openUri("https://github.com/yuyuyuyuyu-dev/not-pulling-probability-calculator")

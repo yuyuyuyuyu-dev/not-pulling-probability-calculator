@@ -47,6 +47,7 @@ myMaterialTheme = { group = "dev.yuyuyuyuyu", name = "mymaterialtheme", version.
 simpleTopAppBar = { group = "dev.yuyuyuyuyu", name = "simpletopappbar", version.ref = "simpleTopAppBar" }
 
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
+
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }

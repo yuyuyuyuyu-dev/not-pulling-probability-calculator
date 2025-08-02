@@ -24,6 +24,7 @@ class NotPullingProbabilityCalculatorPresenter(
                         numberOfTrials = event.numberOfTrials
                     )
 
+                    // TODO: 入力された値が不正な場合は空文字が入るようにする
                     pullingProbability = (probability.pulling * 100).toString()
                     notPullingProbability = (probability.notPulling * 100).toString()
                 }

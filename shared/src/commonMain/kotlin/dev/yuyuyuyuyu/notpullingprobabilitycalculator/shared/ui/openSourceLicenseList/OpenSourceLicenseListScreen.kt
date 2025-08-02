@@ -1,8 +1,8 @@
-package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.openSourceLicenseList
+package dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.openSourceLicenseList
 
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
 
-data object OpenSourceLicenseListScreen : Screen {
+interface OpenSourceLicenseListScreen : Screen {
     data object State : CircuitUiState
 }

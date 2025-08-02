@@ -24,6 +24,7 @@ fun NotPullingProbabilityCalculator(
     var odds by rememberSaveable { mutableStateOf("") }
     var numberOfTrials by rememberSaveable { mutableStateOf("") }
 
+    // TODO: tabキーでカーソルを移動させる
     TextField(
         value = odds,
         onValueChange = {
