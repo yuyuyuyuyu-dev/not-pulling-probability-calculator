@@ -1,4 +1,4 @@
-rootProject.name = "notpullingprobabilitycalculator"
+rootProject.name = "NotPullingProbabilityCalculator"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
