@@ -19,12 +19,16 @@ class NotPullingProbabilityCalculatorPresenter(
         return NotPullingProbabilityCalculatorScreen.State(pullingProbability, notPullingProbability) { event ->
             when (event) {
                 is NotPullingProbabilityCalculatorScreen.Event.ChangeInputValue -> {
+                    if (event.odds.isEmpty() || event.numberOfTrials.isEmpty()) {
+                        pullingProbability = ""
+                        notPullingProbability = ""
+                    }
+
                     val probability = calculateNotPullingProbabilityUseCase(
-                        odds = event.odds,
-                        numberOfTrials = event.numberOfTrials
+                        odds = event.odds.toDoubleOrNull() ?: return@State,
+                        numberOfTrials = event.numberOfTrials.toIntOrNull() ?: return@State,
                     )
 
-                    // TODO: 入力された値が不正な場合は空文字が入るようにする
                     pullingProbability = (probability.pulling * 100).toString()
                     notPullingProbability = (probability.notPulling * 100).toString()
                 }

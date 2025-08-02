@@ -12,6 +12,6 @@ interface NotPullingProbabilityCalculatorScreen : Screen {
     ) : CircuitUiState
 
     sealed class Event : CircuitUiEvent {
-        data class ChangeInputValue(val odds: Double, val numberOfTrials: Int) : Event()
+        data class ChangeInputValue(val odds: String, val numberOfTrials: String) : Event()
     }
 }

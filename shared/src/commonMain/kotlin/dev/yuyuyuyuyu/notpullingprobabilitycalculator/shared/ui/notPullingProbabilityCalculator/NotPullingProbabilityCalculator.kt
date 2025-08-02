@@ -36,11 +36,15 @@ fun NotPullingProbabilityCalculator(
         TextField(
             value = odds,
             onValueChange = {
+                if (it.isNotEmpty() && it.toDoubleOrNull() == null) {
+                    return@TextField
+                }
+
                 odds = it
                 state.eventSink(
                     NotPullingProbabilityCalculatorScreen.Event.ChangeInputValue(
-                        odds = it.toDoubleOrNull() ?: 0.0,
-                        numberOfTrials = numberOfTrials.toIntOrNull() ?: 0,
+                        odds = it,
+                        numberOfTrials = numberOfTrials,
                     )
                 )
             },
@@ -52,14 +56,19 @@ fun NotPullingProbabilityCalculator(
             maxLines = 1,
         )
 
+        // TODO: placeholder
         TextField(
             value = numberOfTrials,
             onValueChange = {
+                if (it.isNotEmpty() && it.toIntOrNull() == null) {
+                    return@TextField
+                }
+
                 numberOfTrials = it
                 state.eventSink(
                     NotPullingProbabilityCalculatorScreen.Event.ChangeInputValue(
-                        odds = odds.toDoubleOrNull() ?: 0.0,
-                        numberOfTrials = it.toIntOrNull() ?: 0,
+                        odds = odds,
+                        numberOfTrials = it,
                     )
                 )
             },
