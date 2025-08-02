@@ -49,6 +49,7 @@ fun NotPullingProbabilityCalculator(
                 )
             },
             label = { Text("排出率（単位：%）") },
+            placeholder = { Text("例：0.75") },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next,
@@ -56,7 +57,6 @@ fun NotPullingProbabilityCalculator(
             maxLines = 1,
         )
 
-        // TODO: placeholder
         TextField(
             value = numberOfTrials,
             onValueChange = {
@@ -73,6 +73,7 @@ fun NotPullingProbabilityCalculator(
                 )
             },
             label = { Text("試行回数（単位：回）") },
+            placeholder = { Text("例：300") },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done,
