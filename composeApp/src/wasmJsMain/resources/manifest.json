@@ -1,8 +1,8 @@
 {
   "name": "NOT Pulling Probability Calculator",
   "short_name": "NOT Pulling Probability",
-  "theme_color": "#FFFBFE",
-  "background_color": "#FFFBFE",
+  "theme_color": "#FFFFF8",
+  "background_color": "#FFFFF8",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
