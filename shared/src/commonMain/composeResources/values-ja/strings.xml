@@ -1,3 +1,12 @@
 <resources>
-    <!--TODO: 多言語対応-->
+    <string name="app_name">引けない確率の計算</string>
+    <string name="open_source_licenses">オープンソース ライセンス</string>
+    <string name="odds_label">排出率（単位：%）</string>
+    <string name="odds_placeholder">例：0.75</string>
+    <string name="number_of_trials_label">試行回数（単位：回）</string>
+    <string name="number_of_trials_placeholder">例：300</string>
+    <string name="not_pulling_probability_text">一度も引けない確率</string>
+    <string name="not_pulling_probability_value">約 %1$s %</string>
+    <string name="pulling_probability_text">少なくとも1回は引ける確率</string>
+    <string name="pulling_probability_value">約 %1$s %</string>
 </resources>

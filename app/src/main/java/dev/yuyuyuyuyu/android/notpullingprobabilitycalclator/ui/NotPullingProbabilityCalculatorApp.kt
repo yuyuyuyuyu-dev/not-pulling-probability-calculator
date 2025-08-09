@@ -7,10 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
+import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.R
 import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreenImpl
 import dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.openSourceLicenseList.OpenSourceLicenseListScreenImpl
 import dev.yuyuyuyuyu.mymaterialtheme.MyMaterialDynamicTheme
@@ -38,8 +40,8 @@ fun NotPullingProbabilityCalculatorApp() {
 
                 SimpleTopAppBar(
                     title = when (currentScreen) {
-                        is OpenSourceLicenseListScreen -> "オープンソース ライセンス"
-                        else -> "引けない確率の計算"
+                        is OpenSourceLicenseListScreen -> stringResource(R.string.open_source_licenses)
+                        else -> stringResource(R.string.app_name)
                     },
                     navigateBackIsPossible = backStack.size > 1,
                     onNavigateBackButtonClick = { navigator.pop() },

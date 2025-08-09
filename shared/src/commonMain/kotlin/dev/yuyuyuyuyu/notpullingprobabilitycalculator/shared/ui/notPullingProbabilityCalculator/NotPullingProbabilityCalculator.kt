@@ -1,6 +1,11 @@
 package dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProbabilityCalculator
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -16,6 +21,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import notpullingprobabilitycalculator.shared.generated.resources.Res
+import notpullingprobabilitycalculator.shared.generated.resources.not_pulling_probability_text
+import notpullingprobabilitycalculator.shared.generated.resources.not_pulling_probability_value
+import notpullingprobabilitycalculator.shared.generated.resources.number_of_trials_label
+import notpullingprobabilitycalculator.shared.generated.resources.number_of_trials_placeholder
+import notpullingprobabilitycalculator.shared.generated.resources.odds_label
+import notpullingprobabilitycalculator.shared.generated.resources.odds_placeholder
+import notpullingprobabilitycalculator.shared.generated.resources.pulling_probability_text
+import notpullingprobabilitycalculator.shared.generated.resources.pulling_probability_value
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NotPullingProbabilityCalculator(
@@ -48,8 +63,8 @@ fun NotPullingProbabilityCalculator(
                     )
                 )
             },
-            label = { Text("排出率（単位：%）") },
-            placeholder = { Text("例：0.75") },
+            label = { Text(stringResource(Res.string.odds_label)) },
+            placeholder = { Text(stringResource(Res.string.odds_placeholder)) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next,
@@ -72,8 +87,8 @@ fun NotPullingProbabilityCalculator(
                     )
                 )
             },
-            label = { Text("試行回数（単位：回）") },
-            placeholder = { Text("例：300") },
+            label = { Text(stringResource(Res.string.number_of_trials_label)) },
+            placeholder = { Text(stringResource(Res.string.number_of_trials_placeholder)) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done,
@@ -83,13 +98,18 @@ fun NotPullingProbabilityCalculator(
         )
 
         Column {
-            Text("一度も引けない確率")
-            Text("約 ${state.notPullingProbability} %")
+            Text(stringResource(Res.string.not_pulling_probability_text))
+            Text(
+                stringResource(
+                    Res.string.not_pulling_probability_value,
+                    state.notPullingProbability,
+                )
+            )
 
             Spacer(Modifier.height(16.dp))
 
-            Text("少なくとも1回は引ける確率")
-            Text("約 ${state.pullingProbability} %")
+            Text(stringResource(Res.string.pulling_probability_text))
+            Text(stringResource(Res.string.pulling_probability_value, state.pullingProbability))
         }
     }
 }

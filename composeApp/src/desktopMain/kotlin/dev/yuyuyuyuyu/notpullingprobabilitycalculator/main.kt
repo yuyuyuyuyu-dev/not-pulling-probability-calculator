@@ -7,7 +7,7 @@ import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.NotPullingProbabilityCa
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "notpullingprobabilitycalculator",
+        title = "NOT Pulling Probability Calculator",
     ) {
         NotPullingProbabilityCalculatorApp()
     }
