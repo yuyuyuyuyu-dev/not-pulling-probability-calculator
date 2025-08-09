@@ -39,8 +39,8 @@ kotlin {
 
             implementation(libs.koin)
             implementation(libs.circuit)
-
             implementation(libs.aboutlibraries.compose.m3)
+            implementation(libs.result)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

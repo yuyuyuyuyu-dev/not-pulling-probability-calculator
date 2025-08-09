@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.github.michaelbull.result.unwrap
 import com.slack.circuit.runtime.presenter.Presenter
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.domain.useCases.CalculateNotPullingProbabilityUseCase
 
@@ -16,7 +17,10 @@ class NotPullingProbabilityCalculatorPresenter(
         var pullingProbability by rememberSaveable { mutableStateOf("") }
         var notPullingProbability by rememberSaveable { mutableStateOf("") }
 
-        return NotPullingProbabilityCalculatorScreen.State(pullingProbability, notPullingProbability) { event ->
+        return NotPullingProbabilityCalculatorScreen.State(
+            pullingProbability,
+            notPullingProbability,
+        ) { event ->
             when (event) {
                 is NotPullingProbabilityCalculatorScreen.Event.ChangeInputValue -> {
                     if (event.odds.isEmpty() || event.numberOfTrials.isEmpty()) {
@@ -28,6 +32,7 @@ class NotPullingProbabilityCalculatorPresenter(
                         odds = event.odds.toDoubleOrNull() ?: return@State,
                         numberOfTrials = event.numberOfTrials.toIntOrNull() ?: return@State,
                     )
+                        .unwrap()
 
                     pullingProbability = (probability.pulling * 100).toString()
                     notPullingProbability = (probability.notPulling * 100).toString()
