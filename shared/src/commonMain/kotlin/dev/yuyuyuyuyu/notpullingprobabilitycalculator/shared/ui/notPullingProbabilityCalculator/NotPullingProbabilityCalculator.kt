@@ -3,9 +3,12 @@ package dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.notPullingProba
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -41,6 +44,7 @@ fun NotPullingProbabilityCalculator(
     contentAlignment = Alignment.Center,
 ) {
     Column(
+        modifier = Modifier.width(IntrinsicSize.Max),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         var odds by rememberSaveable { mutableStateOf("") }
@@ -63,6 +67,7 @@ fun NotPullingProbabilityCalculator(
                     )
                 )
             },
+            modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.odds_label)) },
             placeholder = { Text(stringResource(Res.string.odds_placeholder)) },
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -87,6 +92,7 @@ fun NotPullingProbabilityCalculator(
                     )
                 )
             },
+            modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.number_of_trials_label)) },
             placeholder = { Text(stringResource(Res.string.number_of_trials_placeholder)) },
             keyboardOptions = KeyboardOptions.Default.copy(
