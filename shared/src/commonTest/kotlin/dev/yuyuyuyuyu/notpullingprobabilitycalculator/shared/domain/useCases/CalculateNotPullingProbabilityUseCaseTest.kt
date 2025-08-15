@@ -1,5 +1,6 @@
 package dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.domain.useCases
 
+import com.github.michaelbull.result.get
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.domain.models.Probability
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,7 +15,7 @@ class CalculateNotPullingProbabilityUseCaseTest {
         val numberOfTrials = 300
         val expected = Probability(notPulling = 0.10450922580723788)
 
-        val actual = useCase(odds, numberOfTrials)
+        val actual = useCase(odds, numberOfTrials).get()
 
         assertEquals(expected, actual)
     }
@@ -25,7 +26,7 @@ class CalculateNotPullingProbabilityUseCaseTest {
         val numberOfTrials = 149
         val expected = Probability(notPulling = 1.0)
 
-        val actual = useCase(odds, numberOfTrials)
+        val actual = useCase(odds, numberOfTrials).get()
 
         assertEquals(expected, actual)
     }
@@ -36,7 +37,7 @@ class CalculateNotPullingProbabilityUseCaseTest {
         val numberOfTrials = 149
         val expected = Probability(notPulling = 0.0)
 
-        val actual = useCase(odds, numberOfTrials)
+        val actual = useCase(odds, numberOfTrials).get()
 
         assertEquals(expected, actual)
     }
