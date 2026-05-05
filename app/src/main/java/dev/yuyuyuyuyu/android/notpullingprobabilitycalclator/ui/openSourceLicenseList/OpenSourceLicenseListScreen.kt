@@ -1,7 +1,0 @@
-package dev.yuyuyuyuyu.android.notpullingprobabilitycalclator.ui.openSourceLicenseList
-
-import dev.yuyuyuyuyu.notpullingprobabilitycalculator.shared.ui.openSourceLicenseList.OpenSourceLicenseListScreen
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
-data object OpenSourceLicenseListScreenImpl : OpenSourceLicenseListScreen
