@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import me.tatarka.inject.annotations.Inject
-import kotlin.math.roundToInt
 
 @Inject
 class NotPullingProbabilityCalculatorViewModelImpl(
@@ -20,8 +19,8 @@ class NotPullingProbabilityCalculatorViewModelImpl(
             NotPullingProbabilityCalculatorUiState(
                 odds = "",
                 numberOfTrials = "",
-                pullingProbability = "-",
-                notPullingProbability = "-",
+                pullingProbability = "",
+                notPullingProbability = "",
             ),
         )
     override val uiState: StateFlow<NotPullingProbabilityCalculatorUiState> = _uiState.asStateFlow()
@@ -55,24 +54,18 @@ class NotPullingProbabilityCalculatorViewModelImpl(
                 .onErr {
                     _uiState.update {
                         it.copy(
-                            notPullingProbability = "-",
-                            pullingProbability = "-",
+                            notPullingProbability = "",
+                            pullingProbability = "",
                         )
                     }
                 }
         } else {
             _uiState.update {
                 it.copy(
-                    notPullingProbability = "-",
-                    pullingProbability = "-",
+                    notPullingProbability = "",
+                    pullingProbability = "",
                 )
             }
         }
-    }
-
-    private fun Double.format(digits: Int): String {
-        var multiplier = 1.0
-        repeat(digits) { multiplier *= 10 }
-        return ((this * multiplier).roundToInt() / multiplier).toString()
     }
 }
