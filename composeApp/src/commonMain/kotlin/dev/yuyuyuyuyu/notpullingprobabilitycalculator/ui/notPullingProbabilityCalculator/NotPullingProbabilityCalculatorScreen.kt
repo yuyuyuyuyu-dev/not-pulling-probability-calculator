@@ -34,7 +34,10 @@ import notpullingprobabilitycalculator.composeapp.generated.resources.pulling_pr
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun NotPullingProbabilityCalculatorScreen(viewModel: NotPullingProbabilityCalculatorViewModel, modifier: Modifier = Modifier) {
+fun NotPullingProbabilityCalculatorScreen(
+    viewModel: NotPullingProbabilityCalculatorViewModel,
+    modifier: Modifier = Modifier,
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     Box(
@@ -58,10 +61,11 @@ fun NotPullingProbabilityCalculatorScreen(viewModel: NotPullingProbabilityCalcul
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(stringResource(Res.string.odds_label)) },
                 placeholder = { Text(stringResource(Res.string.odds_placeholder)) },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next,
-                ),
+                keyboardOptions =
+                    KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
                 maxLines = 1,
             )
 
@@ -76,10 +80,11 @@ fun NotPullingProbabilityCalculatorScreen(viewModel: NotPullingProbabilityCalcul
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(stringResource(Res.string.number_of_trials_label)) },
                 placeholder = { Text(stringResource(Res.string.number_of_trials_placeholder)) },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done,
-                ),
+                keyboardOptions =
+                    KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done,
+                    ),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 maxLines = 1,
             )
@@ -90,7 +95,7 @@ fun NotPullingProbabilityCalculatorScreen(viewModel: NotPullingProbabilityCalcul
                     stringResource(
                         Res.string.not_pulling_probability_value,
                         uiState.notPullingProbability,
-                    )
+                    ),
                 )
 
                 Spacer(Modifier.height(16.dp))

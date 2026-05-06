@@ -21,7 +21,7 @@ import kotlin.compareTo
 @Composable
 fun MainScreen(
     appComponent: AppComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val backStack: MutableList<MainNavigationRoute> =
         rememberSerializable(serializer = SnapshotStateListSerializer()) {
@@ -32,11 +32,12 @@ fun MainScreen(
     val uriHandler = LocalUriHandler.current
 
     Scaffold(
-        modifier = modifier.clickable(
-            interactionSource = null,
-            indication = null,
-            onClick = { focusManager.clearFocus() },
-        ),
+        modifier =
+            modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = { focusManager.clearFocus() },
+            ),
         topBar = {
             SimpleTopAppBar(
                 title =

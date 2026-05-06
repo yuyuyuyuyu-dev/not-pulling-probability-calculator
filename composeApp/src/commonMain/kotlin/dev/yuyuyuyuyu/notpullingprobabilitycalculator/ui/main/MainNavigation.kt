@@ -23,7 +23,7 @@ fun MainNavigation(
                 MainNavigationRoute.NotPullingProbabilityCalculator -> {
                     NavEntry(key) {
                         NotPullingProbabilityCalculatorScreen(
-                            viewModel = appComponent.notPullingProbabilityCalculatorViewModel
+                            viewModel = appComponent.notPullingProbabilityCalculatorViewModel,
                         )
                     }
                 }

@@ -15,15 +15,15 @@ import kotlin.math.roundToInt
 class NotPullingProbabilityCalculatorViewModelImpl(
     private val calculateNotPullingProbabilityUseCase: CalculateNotPullingProbabilityUseCase,
 ) : ViewModel(), NotPullingProbabilityCalculatorViewModel {
-
-    private val _uiState = MutableStateFlow(
-        NotPullingProbabilityCalculatorUiState(
-            odds = "",
-            numberOfTrials = "",
-            pullingProbability = "-",
-            notPullingProbability = "-",
+    private val _uiState =
+        MutableStateFlow(
+            NotPullingProbabilityCalculatorUiState(
+                odds = "",
+                numberOfTrials = "",
+                pullingProbability = "-",
+                notPullingProbability = "-",
+            ),
         )
-    )
     override val uiState: StateFlow<NotPullingProbabilityCalculatorUiState> = _uiState.asStateFlow()
 
     override fun onOddsChange(newValue: String) {
@@ -48,7 +48,7 @@ class NotPullingProbabilityCalculatorViewModelImpl(
                     _uiState.update {
                         it.copy(
                             notPullingProbability = notPulling,
-                            pullingProbability = pulling
+                            pullingProbability = pulling,
                         )
                     }
                 }
@@ -56,7 +56,7 @@ class NotPullingProbabilityCalculatorViewModelImpl(
                     _uiState.update {
                         it.copy(
                             notPullingProbability = "-",
-                            pullingProbability = "-"
+                            pullingProbability = "-",
                         )
                     }
                 }
@@ -64,12 +64,12 @@ class NotPullingProbabilityCalculatorViewModelImpl(
             _uiState.update {
                 it.copy(
                     notPullingProbability = "-",
-                    pullingProbability = "-"
+                    pullingProbability = "-",
                 )
             }
         }
     }
-    
+
     private fun Double.format(digits: Int): String {
         var multiplier = 1.0
         repeat(digits) { multiplier *= 10 }
