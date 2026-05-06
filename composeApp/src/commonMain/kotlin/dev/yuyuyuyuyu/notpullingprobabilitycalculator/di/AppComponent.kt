@@ -7,12 +7,11 @@ import me.tatarka.inject.annotations.Provides
 
 @Component
 abstract class AppComponent {
-    
     abstract val notPullingProbabilityCalculatorViewModel: NotPullingProbabilityCalculatorViewModelImpl
-    
+
     @Provides
     fun provideNotPullingProbabilityCalculatorViewModel(
-        impl: NotPullingProbabilityCalculatorViewModelImpl
+        impl: NotPullingProbabilityCalculatorViewModelImpl,
     ): NotPullingProbabilityCalculatorViewModel = impl
 }
 

@@ -10,15 +10,19 @@ import kotlin.math.pow
 
 @Inject
 class CalculateNotPullingProbabilityUseCase {
-    operator fun invoke(odds: Double, numberOfTrials: Int): Result<Probability, DomainError> {
+    operator fun invoke(
+        odds: Double,
+        numberOfTrials: Int,
+    ): Result<Probability, DomainError> {
         if (odds !in 0.0..100.0) {
             return Err(DomainError.InvalidOddsError)
         }
 
         return Ok(
-            value = Probability(
-                notPulling = (1 - odds / 100).pow(numberOfTrials),
-            ),
+            value =
+                Probability(
+                    notPulling = (1 - odds / 100).pow(numberOfTrials),
+                ),
         )
     }
 }

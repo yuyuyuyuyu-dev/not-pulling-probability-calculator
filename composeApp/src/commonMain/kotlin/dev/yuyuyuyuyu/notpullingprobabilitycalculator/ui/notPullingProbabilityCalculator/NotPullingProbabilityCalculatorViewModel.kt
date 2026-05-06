@@ -6,5 +6,6 @@ interface NotPullingProbabilityCalculatorViewModel {
     val uiState: StateFlow<NotPullingProbabilityCalculatorUiState>
 
     fun onOddsChange(newValue: String)
+
     fun onNumberOfTrialsChange(newValue: String)
 }
