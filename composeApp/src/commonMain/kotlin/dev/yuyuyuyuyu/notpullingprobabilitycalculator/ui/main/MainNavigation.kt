@@ -4,11 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.di.AppComponent
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreen
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.openSourceLicenses.OpenSourceLicensesScreen
 
 @Composable
 fun MainNavigation(
+    appComponent: AppComponent,
     backStack: MutableList<MainNavigationRoute>,
     modifier: Modifier = Modifier,
 ) {
@@ -20,7 +22,9 @@ fun MainNavigation(
             when (key) {
                 MainNavigationRoute.NotPullingProbabilityCalculator -> {
                     NavEntry(key) {
-                        NotPullingProbabilityCalculatorScreen(TODO())
+                        NotPullingProbabilityCalculatorScreen(
+                            viewModel = appComponent.notPullingProbabilityCalculatorViewModel
+                        )
                     }
                 }
 

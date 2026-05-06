@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.di.AppComponent
 import dev.yuyuyuyuyu.simpleTopAppBar.SimpleTopAppBar
 import notpullingprobabilitycalculator.composeapp.generated.resources.Res
 import notpullingprobabilitycalculator.composeapp.generated.resources.app_name
@@ -18,7 +19,10 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.compareTo
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    appComponent: AppComponent,
+    modifier: Modifier = Modifier
+) {
     val backStack: MutableList<MainNavigationRoute> =
         rememberSerializable(serializer = SnapshotStateListSerializer()) {
             mutableStateListOf(MainNavigationRoute.NotPullingProbabilityCalculator)
@@ -28,7 +32,7 @@ fun MainScreen() {
     val uriHandler = LocalUriHandler.current
 
     Scaffold(
-        modifier = Modifier.clickable(
+        modifier = modifier.clickable(
             interactionSource = null,
             indication = null,
             onClick = { focusManager.clearFocus() },
@@ -53,6 +57,6 @@ fun MainScreen() {
             )
         },
     ) { innerPadding ->
-        MainNavigation(backStack, Modifier.padding(innerPadding))
+        MainNavigation(appComponent, backStack, Modifier.padding(innerPadding))
     }
 }

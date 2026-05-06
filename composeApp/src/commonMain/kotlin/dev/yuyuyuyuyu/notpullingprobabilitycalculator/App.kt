@@ -20,6 +20,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import dev.yuyuyuyuyu.mymaterialtheme.MyMaterialTheme
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.di.AppComponent
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.di.createAppComponent
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.main.MainScreen
 import dev.yuyuyuyuyu.simpleTopAppBar.SimpleTopAppBar
 import org.jetbrains.compose.resources.painterResource
@@ -30,7 +32,9 @@ import notpullingprobabilitycalculator.composeapp.generated.resources.compose_mu
 @Composable
 @Preview
 fun App() {
+    val appComponent = remember { createAppComponent() }
+
     MyMaterialTheme {
-        MainScreen()
+        MainScreen(appComponent = appComponent)
     }
 }

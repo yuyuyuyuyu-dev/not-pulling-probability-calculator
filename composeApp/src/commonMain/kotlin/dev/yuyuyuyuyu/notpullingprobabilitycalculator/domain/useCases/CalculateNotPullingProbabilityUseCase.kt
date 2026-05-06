@@ -5,8 +5,10 @@ import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.domain.errors.DomainError
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.domain.models.Probability
+import me.tatarka.inject.annotations.Inject
 import kotlin.math.pow
 
+@Inject
 class CalculateNotPullingProbabilityUseCase {
     operator fun invoke(odds: Double, numberOfTrials: Int): Result<Probability, DomainError> {
         if (odds !in 0.0..100.0) {
