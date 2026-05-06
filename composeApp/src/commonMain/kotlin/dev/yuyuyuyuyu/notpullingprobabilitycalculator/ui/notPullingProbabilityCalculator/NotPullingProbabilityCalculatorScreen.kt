@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -58,7 +59,7 @@ fun NotPullingProbabilityCalculatorScreen(
                     }
                     viewModel.onOddsChange(it)
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("OddsTextField"),
                 label = { Text(stringResource(Res.string.odds_label)) },
                 placeholder = { Text(stringResource(Res.string.odds_placeholder)) },
                 keyboardOptions =
@@ -77,7 +78,7 @@ fun NotPullingProbabilityCalculatorScreen(
                     }
                     viewModel.onNumberOfTrialsChange(it)
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("TrialsTextField"),
                 label = { Text(stringResource(Res.string.number_of_trials_label)) },
                 placeholder = { Text(stringResource(Res.string.number_of_trials_placeholder)) },
                 keyboardOptions =
@@ -92,16 +93,21 @@ fun NotPullingProbabilityCalculatorScreen(
             Column {
                 Text(stringResource(Res.string.not_pulling_probability_text))
                 Text(
-                    stringResource(
-                        Res.string.not_pulling_probability_value,
-                        uiState.notPullingProbability,
-                    ),
+                    text =
+                        stringResource(
+                            Res.string.not_pulling_probability_value,
+                            uiState.notPullingProbability,
+                        ),
+                    modifier = Modifier.testTag("notPullingProbability_${uiState.notPullingProbability}"),
                 )
 
                 Spacer(Modifier.height(16.dp))
 
                 Text(stringResource(Res.string.pulling_probability_text))
-                Text(stringResource(Res.string.pulling_probability_value, uiState.pullingProbability))
+                Text(
+                    text = stringResource(Res.string.pulling_probability_value, uiState.pullingProbability),
+                    modifier = Modifier.testTag("pullingProbability_${uiState.pullingProbability}"),
+                )
             }
         }
     }

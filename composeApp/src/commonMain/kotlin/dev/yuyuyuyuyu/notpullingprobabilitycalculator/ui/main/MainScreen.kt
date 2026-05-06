@@ -3,12 +3,14 @@ package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.main
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.testTag
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.di.AppComponent
 import dev.yuyuyuyuyu.simpleTopAppBar.SimpleTopAppBar
@@ -46,6 +48,12 @@ fun MainScreen(
                         else -> stringResource(Res.string.app_name)
                     },
                 navigateBackIsPossible = backStack.size > 1,
+                openSourceLicensesButtonLabel = {
+                    Text(
+                        text = stringResource(Res.string.open_source_licenses),
+                        modifier = Modifier.testTag("openSourceLicensesMenuItemText"),
+                    )
+                },
                 onNavigateBackButtonClick = { backStack.removeLastOrNull() },
                 onOpenSourceLicensesButtonClick = {
                     if (backStack.lastOrNull() != MainNavigationRoute.OpenSourceLicenses) {
