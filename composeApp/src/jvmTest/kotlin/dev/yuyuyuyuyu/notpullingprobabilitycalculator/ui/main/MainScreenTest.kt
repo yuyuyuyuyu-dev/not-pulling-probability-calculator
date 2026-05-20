@@ -31,9 +31,10 @@ class MainScreenTest {
     fun `displays calculated probabilities when 0_75 percent odds drawn 300 times`() =
         runComposeUiTest {
             // Arrange
-            val viewModel = NotPullingProbabilityCalculatorViewModelImpl(
-                CalculateNotPullingProbabilityUseCase(),
-            )
+            val viewModel =
+                NotPullingProbabilityCalculatorViewModelImpl(
+                    CalculateNotPullingProbabilityUseCase(),
+                )
             setContent {
                 MainScreen(notPullingProbabilityCalculatorViewModel = viewModel)
             }
