@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityCalculator
+package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.main
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertTextEquals
@@ -6,13 +6,14 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.v2.runComposeUiTest
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.domain.useCases.CalculateNotPullingProbabilityUseCase
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorViewModelImpl
 import java.util.Locale
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
-class NotPullingProbabilityCalculatorScreenTest {
+class MainScreenTest {
     private lateinit var originalLocale: Locale
 
     @BeforeTest
@@ -34,7 +35,7 @@ class NotPullingProbabilityCalculatorScreenTest {
                 CalculateNotPullingProbabilityUseCase(),
             )
             setContent {
-                NotPullingProbabilityCalculatorScreen(viewModel = viewModel)
+                MainScreen(notPullingProbabilityCalculatorViewModel = viewModel)
             }
 
             // Act
@@ -44,7 +45,13 @@ class NotPullingProbabilityCalculatorScreenTest {
             waitForIdle()
 
             // Assert
-            onNodeWithTag(testTag = "notPullingProbabilityValue").assertTextEquals("Approx. 10.45092258072379 %")
-            onNodeWithTag(testTag = "pullingProbabilityValue").assertTextEquals("Approx. 89.54907741927622 %")
+            onNodeWithTag(
+                testTag = "notPullingProbabilityValue",
+                useUnmergedTree = true,
+            ).assertTextEquals("Approx. 10.45092258072379 %")
+            onNodeWithTag(
+                testTag = "pullingProbabilityValue",
+                useUnmergedTree = true,
+            ).assertTextEquals("Approx. 89.54907741927622 %")
         }
 }
