@@ -43,6 +43,12 @@ kotlin {
         binaries.executable()
     }
 
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
@@ -70,6 +76,9 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.compose.uiTest)
+        }
+        jvmTest.dependencies {
+            implementation(compose.desktop.currentOs)
         }
     }
 }
@@ -107,4 +116,5 @@ dependencies {
     add("kspAndroid", libs.kotlin.inject.compiler)
     add("kspJs", libs.kotlin.inject.compiler)
     add("kspWasmJs", libs.kotlin.inject.compiler)
+    add("kspJvm", libs.kotlin.inject.compiler)
 }

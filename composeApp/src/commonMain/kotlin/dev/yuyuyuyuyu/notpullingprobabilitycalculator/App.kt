@@ -13,6 +13,8 @@ fun App() {
     val appComponent = remember { createAppComponent() }
 
     MyMaterialTheme {
-        MainScreen(appComponent = appComponent)
+        MainScreen(
+            notPullingProbabilityCalculatorViewModel = appComponent.notPullingProbabilityCalculatorViewModel,
+        )
     }
 }

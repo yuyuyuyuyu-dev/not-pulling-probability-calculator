@@ -59,7 +59,7 @@ fun NotPullingProbabilityCalculatorScreen(
                     }
                     viewModel.onOddsChange(it)
                 },
-                modifier = Modifier.fillMaxWidth().testTag("OddsTextField"),
+                modifier = Modifier.fillMaxWidth().testTag("oddsTextField"),
                 label = { Text(stringResource(Res.string.odds_label)) },
                 placeholder = { Text(stringResource(Res.string.odds_placeholder)) },
                 keyboardOptions =
@@ -78,7 +78,7 @@ fun NotPullingProbabilityCalculatorScreen(
                     }
                     viewModel.onNumberOfTrialsChange(it)
                 },
-                modifier = Modifier.fillMaxWidth().testTag("TrialsTextField"),
+                modifier = Modifier.fillMaxWidth().testTag("trialsTextField"),
                 label = { Text(stringResource(Res.string.number_of_trials_label)) },
                 placeholder = { Text(stringResource(Res.string.number_of_trials_placeholder)) },
                 keyboardOptions =
@@ -98,15 +98,18 @@ fun NotPullingProbabilityCalculatorScreen(
                             Res.string.not_pulling_probability_value,
                             uiState.notPullingProbability,
                         ),
-                    modifier = Modifier.testTag("notPullingProbability_${uiState.notPullingProbability}"),
+                    modifier = Modifier.testTag("notPullingProbabilityValue"),
                 )
 
                 Spacer(Modifier.height(16.dp))
 
                 Text(stringResource(Res.string.pulling_probability_text))
                 Text(
-                    text = stringResource(Res.string.pulling_probability_value, uiState.pullingProbability),
-                    modifier = Modifier.testTag("pullingProbability_${uiState.pullingProbability}"),
+                    text = stringResource(
+                        Res.string.pulling_probability_value,
+                        uiState.pullingProbability
+                    ),
+                    modifier = Modifier.testTag("pullingProbabilityValue"),
                 )
             }
         }
