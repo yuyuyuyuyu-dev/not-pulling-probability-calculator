@@ -1,0 +1,27 @@
+config:
+  validation: true
+  warningsAsErrors: false
+
+potential-bugs:
+  active: true
+  UnreachableCode:
+    active: true
+  UnusedUnaryOperator:
+    active: true
+  UselessPostfixExpression:
+    active: true
+
+style:
+  active: true
+  UnusedImport:
+    active: true
+  UnusedParameter:
+    active: true
+  UnusedPrivateClass:
+    active: true
+  UnusedPrivateFunction:
+    active: true
+  UnusedPrivateProperty:
+    active: true
+  UnusedVariable:
+    active: true
