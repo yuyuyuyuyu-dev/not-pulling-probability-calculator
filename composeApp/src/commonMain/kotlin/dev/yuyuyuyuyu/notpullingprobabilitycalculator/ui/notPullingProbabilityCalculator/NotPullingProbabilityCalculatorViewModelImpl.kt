@@ -13,7 +13,8 @@ import me.tatarka.inject.annotations.Inject
 @Inject
 class NotPullingProbabilityCalculatorViewModelImpl(
     private val calculateNotPullingProbabilityUseCase: CalculateNotPullingProbabilityUseCase,
-) : ViewModel(), NotPullingProbabilityCalculatorViewModel {
+) : ViewModel(),
+    NotPullingProbabilityCalculatorViewModel {
     private val _uiState =
         MutableStateFlow(
             NotPullingProbabilityCalculatorUiState(
@@ -50,8 +51,7 @@ class NotPullingProbabilityCalculatorViewModelImpl(
                             pullingProbability = pulling,
                         )
                     }
-                }
-                .onErr {
+                }.onErr {
                     _uiState.update {
                         it.copy(
                             notPullingProbability = "",

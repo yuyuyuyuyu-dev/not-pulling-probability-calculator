@@ -105,10 +105,11 @@ fun NotPullingProbabilityCalculatorScreen(
 
                 Text(stringResource(Res.string.pulling_probability_text))
                 Text(
-                    text = stringResource(
-                        Res.string.pulling_probability_value,
-                        uiState.pullingProbability
-                    ),
+                    text =
+                        stringResource(
+                            Res.string.pulling_probability_value,
+                            uiState.pullingProbability,
+                        ),
                     modifier = Modifier.testTag("pullingProbabilityValue"),
                 )
             }
