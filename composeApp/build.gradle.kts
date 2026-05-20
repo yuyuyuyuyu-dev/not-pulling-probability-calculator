@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.composePwa)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.detekt)
 }
 
 spotless {
@@ -23,6 +24,68 @@ spotless {
         target("*.gradle.kts")
         ktlint()
     }
+}
+
+detekt {
+    source.setFrom(
+        "src/commonMain/kotlin",
+        "src/androidMain/kotlin",
+        "src/jsMain/kotlin",
+        "src/jvmMain/kotlin",
+        "src/wasmJsMain/kotlin",
+    )
+    config.setFrom(rootProject.files("config/detekt/detekt.yml"))
+    buildUponDefaultConfig = false
+    allRules = false
+    parallel = true
+    basePath.set(rootDir)
+    failOnSeverity = dev.detekt.gradle.extensions.FailOnSeverity.Warning
+}
+
+tasks.withType<dev.detekt.gradle.Detekt>().configureEach {
+    jvmTarget.set("11")
+    reports {
+        sarif.required.set(true)
+        markdown.required.set(true)
+    }
+    if (name == "detektDebugAndroid") {
+        exclude(
+            "**/Platform.android.kt",
+            "**/di/AppComponent.android.kt",
+            "**/androidMainResourceCollectors/**",
+            "**/ActualResourceCollectors.kt",
+            "**/ExpectResourceCollectors.kt",
+        )
+    }
+    if (name == "detektMainJvm") {
+        exclude(
+            "**/Platform.jvm.kt",
+            "**/di/AppComponent.jvm.kt",
+            "**/jvmMainResourceCollectors/**",
+            "**/ActualResourceCollectors.kt",
+            "**/ExpectResourceCollectors.kt",
+        )
+    }
+}
+
+tasks.withType<dev.detekt.gradle.DetektCreateBaselineTask>().configureEach {
+    jvmTarget.set("11")
+}
+
+val unusedCodeCheck by tasks.registering {
+    group = "verification"
+    description = "Runs detekt checks for unused production Kotlin code."
+    dependsOn(
+        "detekt",
+        "detektCommonMainSourceSet",
+        "detektWebMainSourceSet",
+        "detektAndroidMainSourceSet",
+        "detektJsMainSourceSet",
+        "detektJvmMainSourceSet",
+        "detektWasmJsMainSourceSet",
+        "detektDebugAndroid",
+        "detektMainJvm",
+    )
 }
 
 kotlin {
