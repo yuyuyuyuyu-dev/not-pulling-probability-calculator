@@ -140,6 +140,9 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.compose.uiTest)
         }
+        jvmMain.dependencies {
+            implementation(compose.desktop.currentOs)
+        }
         jvmTest.dependencies {
             implementation(compose.desktop.currentOs)
         }
@@ -179,6 +182,12 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+compose.desktop {
+    application {
+        mainClass = "dev.yuyuyuyuyu.notpullingprobabilitycalculator.MainKt"
     }
 }
 
