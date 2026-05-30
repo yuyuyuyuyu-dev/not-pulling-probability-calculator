@@ -1,0 +1,6 @@
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Each line is a pattern followed by one or more owners.
+# The owners will be automatically requested for review when a PR touches matching files.
+
+*       @yuyuyuyuyu-dev
