@@ -22,6 +22,12 @@ jobs:
           java-version: '21'
           distribution: 'jetbrains'
 
+      # Spotless runs Prettier (web + TOML formatting) via Node/npm.
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
