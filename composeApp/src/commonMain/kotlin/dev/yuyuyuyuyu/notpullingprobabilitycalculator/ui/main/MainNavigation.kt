@@ -2,15 +2,15 @@ package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import dev.yuyuyuyuyu.notpullingprobabilitycalculator.di.LocalAppComponent
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorScreen
-import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorViewModel
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.openSourceLicenses.OpenSourceLicensesScreen
 
 @Composable
 fun MainNavigation(
-    notPullingProbabilityCalculatorViewModel: NotPullingProbabilityCalculatorViewModel,
     backStack: MutableList<MainNavigationRoute>,
     modifier: Modifier = Modifier,
 ) {
@@ -22,8 +22,12 @@ fun MainNavigation(
             when (key) {
                 MainNavigationRoute.NotPullingProbabilityCalculator -> {
                     NavEntry(key) {
+                        // Resolve this screen's ViewModel where it is actually used,
+                        // pulling the container from the composition instead of having
+                        // it threaded down as a parameter.
+                        val appComponent = LocalAppComponent.current
                         NotPullingProbabilityCalculatorScreen(
-                            viewModel = notPullingProbabilityCalculatorViewModel,
+                            viewModel = viewModel { appComponent.notPullingProbabilityCalculatorViewModel },
                         )
                     }
                 }

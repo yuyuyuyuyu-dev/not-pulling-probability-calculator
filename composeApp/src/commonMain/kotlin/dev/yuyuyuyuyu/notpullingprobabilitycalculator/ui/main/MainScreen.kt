@@ -12,7 +12,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
-import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.notPullingProbabilityCalculator.NotPullingProbabilityCalculatorViewModel
 import dev.yuyuyuyuyu.simpleTopAppBar.SimpleTopAppBar
 import notpullingprobabilitycalculator.composeapp.generated.resources.Res
 import notpullingprobabilitycalculator.composeapp.generated.resources.app_name
@@ -20,10 +19,7 @@ import notpullingprobabilitycalculator.composeapp.generated.resources.open_sourc
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MainScreen(
-    notPullingProbabilityCalculatorViewModel: NotPullingProbabilityCalculatorViewModel,
-    modifier: Modifier = Modifier,
-) {
+fun MainScreen(modifier: Modifier = Modifier) {
     val backStack: MutableList<MainNavigationRoute> =
         rememberSerializable(serializer = SnapshotStateListSerializer()) {
             mutableStateListOf(MainNavigationRoute.NotPullingProbabilityCalculator)
@@ -66,7 +62,6 @@ fun MainScreen(
         },
     ) { innerPadding ->
         MainNavigation(
-            notPullingProbabilityCalculatorViewModel = notPullingProbabilityCalculatorViewModel,
             backStack = backStack,
             modifier = Modifier.padding(innerPadding),
         )
