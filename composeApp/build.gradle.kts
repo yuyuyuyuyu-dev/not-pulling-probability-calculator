@@ -138,12 +138,8 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.compose.uiTest)
         }
         jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-        }
-        jvmTest.dependencies {
             implementation(compose.desktop.currentOs)
         }
     }
