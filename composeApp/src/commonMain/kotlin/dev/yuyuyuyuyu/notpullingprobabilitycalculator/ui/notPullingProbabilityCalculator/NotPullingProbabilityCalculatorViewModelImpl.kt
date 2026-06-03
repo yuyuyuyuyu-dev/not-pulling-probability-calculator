@@ -52,8 +52,8 @@ class NotPullingProbabilityCalculatorViewModelImpl(
                         )
                     }
                 }.onErr {
-                    _uiState.update {
-                        it.copy(
+                    _uiState.update { state ->
+                        state.copy(
                             notPullingProbability = "",
                             pullingProbability = "",
                         )

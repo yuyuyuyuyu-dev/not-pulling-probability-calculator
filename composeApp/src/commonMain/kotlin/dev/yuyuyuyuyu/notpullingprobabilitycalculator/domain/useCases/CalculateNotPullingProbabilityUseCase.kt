@@ -14,15 +14,19 @@ class CalculateNotPullingProbabilityUseCase {
         odds: Double,
         numberOfTrials: Int,
     ): Result<Probability, DomainError> {
-        if (odds !in 0.0..100.0) {
+        if (odds !in 0.0..MAX_PERCENTAGE) {
             return Err(DomainError.InvalidOddsError)
         }
 
         return Ok(
             value =
                 Probability(
-                    notPulling = (1 - odds / 100).pow(numberOfTrials),
+                    notPulling = (1 - odds / MAX_PERCENTAGE).pow(numberOfTrials),
                 ),
         )
+    }
+
+    private companion object {
+        const val MAX_PERCENTAGE = 100.0
     }
 }

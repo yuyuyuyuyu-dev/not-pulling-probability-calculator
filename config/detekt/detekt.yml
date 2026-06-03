@@ -1,27 +1,49 @@
-config:
-  validation: true
-  warningsAsErrors: false
-
-potential-bugs:
-  active: true
-  UnreachableCode:
-    active: true
-  UnusedUnaryOperator:
-    active: true
-  UselessPostfixExpression:
-    active: true
+# Delta over detekt's bundled default rule set (buildUponDefaultConfig = true).
+#
+# Division of labor:
+#   - ktlint (via spotless) is the source of truth for formatting / layout.
+#     detekt rules that overlap with ktlint are turned off here so the two tools
+#     never disagree.
+#   - detekt owns code smells, complexity and potential bugs.
+#   - Compose-specific checks come from the io.nlopez.compose.rules:detekt plugin
+#     (the "Compose" rule set), which is left at its recommended defaults.
 
 style:
-  active: true
-  UnusedImport:
-    active: true
-  UnusedParameter:
-    active: true
-  UnusedPrivateClass:
-    active: true
+  # Line length is enforced by ktlint (max_line_length).
+  MaxLineLength:
+    active: false
+  # Wildcard imports are governed by ktlint (no-wildcard-imports).
+  WildcardImport:
+    active: false
+  # Compose color/dimension declarations are full of literals.
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+  # @Preview functions are tooling entry points, not dead code, even when private
+  # (which the Compose PreviewPublic rule requires them to be).
   UnusedPrivateFunction:
-    active: true
-  UnusedPrivateProperty:
-    active: true
-  UnusedVariable:
-    active: true
+    ignoreAnnotated: ['Preview']
+
+naming:
+  # @Composable functions are PascalCase by convention.
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+  # Allow PascalCase top-level constants (e.g. compose tokens).
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][A-Za-z0-9]*'
+
+complexity:
+  # Composables routinely take many parameters, most with defaults.
+  LongParameterList:
+    ignoreDefaultParameters: true
+  # @Preview functions shouldn't count toward a file's function budget.
+  TooManyFunctions:
+    ignoreAnnotatedFunctions: ['Preview']
+
+# Compose rules (io.nlopez.compose.rules:detekt).
+Compose:
+  # LocalAppComponent is a deliberate, single DI entry point — sanction it so the
+  # "avoid new CompositionLocals" rule doesn't fight our chosen DI approach.
+  CompositionLocalAllowlist:
+    allowedCompositionLocals:
+      - LocalAppComponent

@@ -40,6 +40,7 @@ fun NotPullingProbabilityCalculatorScreen(
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val focusManager = LocalFocusManager.current
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -49,70 +50,86 @@ fun NotPullingProbabilityCalculatorScreen(
             modifier = Modifier.width(IntrinsicSize.Max),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            val focusManager = LocalFocusManager.current
-
-            TextField(
+            OddsTextField(
                 value = uiState.odds,
-                onValueChange = {
-                    if (it.isNotEmpty() && it.toDoubleOrNull() == null) {
-                        return@TextField
-                    }
-                    viewModel.onOddsChange(it)
-                },
-                modifier = Modifier.fillMaxWidth().testTag("oddsTextField"),
-                label = { Text(stringResource(Res.string.odds_label)) },
-                placeholder = { Text(stringResource(Res.string.odds_placeholder)) },
-                keyboardOptions =
-                    KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next,
-                    ),
-                maxLines = 1,
+                onValueChange = viewModel::onOddsChange,
             )
-
-            TextField(
+            NumberOfTrialsTextField(
                 value = uiState.numberOfTrials,
-                onValueChange = {
-                    if (it.isNotEmpty() && it.toIntOrNull() == null) {
-                        return@TextField
-                    }
-                    viewModel.onNumberOfTrialsChange(it)
-                },
-                modifier = Modifier.fillMaxWidth().testTag("trialsTextField"),
-                label = { Text(stringResource(Res.string.number_of_trials_label)) },
-                placeholder = { Text(stringResource(Res.string.number_of_trials_placeholder)) },
-                keyboardOptions =
-                    KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done,
-                    ),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                maxLines = 1,
+                onValueChange = viewModel::onNumberOfTrialsChange,
+                onImeAction = { focusManager.clearFocus() },
             )
-
-            Column {
-                Text(stringResource(Res.string.not_pulling_probability_text))
-                Text(
-                    text =
-                        stringResource(
-                            Res.string.not_pulling_probability_value,
-                            uiState.notPullingProbability,
-                        ),
-                    modifier = Modifier.testTag("notPullingProbabilityValue"),
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                Text(stringResource(Res.string.pulling_probability_text))
-                Text(
-                    text =
-                        stringResource(
-                            Res.string.pulling_probability_value,
-                            uiState.pullingProbability,
-                        ),
-                    modifier = Modifier.testTag("pullingProbabilityValue"),
-                )
-            }
+            ProbabilityResults(
+                notPullingProbability = uiState.notPullingProbability,
+                pullingProbability = uiState.pullingProbability,
+            )
         }
+    }
+}
+
+@Composable
+private fun OddsTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TextField(
+        value = value,
+        onValueChange = { if (it.isEmpty() || it.toDoubleOrNull() != null) onValueChange(it) },
+        modifier = modifier.fillMaxWidth().testTag("oddsTextField"),
+        label = { Text(stringResource(Res.string.odds_label)) },
+        placeholder = { Text(stringResource(Res.string.odds_placeholder)) },
+        keyboardOptions =
+            KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next,
+            ),
+        maxLines = 1,
+    )
+}
+
+@Composable
+private fun NumberOfTrialsTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    onImeAction: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TextField(
+        value = value,
+        onValueChange = { if (it.isEmpty() || it.toIntOrNull() != null) onValueChange(it) },
+        modifier = modifier.fillMaxWidth().testTag("trialsTextField"),
+        label = { Text(stringResource(Res.string.number_of_trials_label)) },
+        placeholder = { Text(stringResource(Res.string.number_of_trials_placeholder)) },
+        keyboardOptions =
+            KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done,
+            ),
+        keyboardActions = KeyboardActions(onDone = { onImeAction() }),
+        maxLines = 1,
+    )
+}
+
+@Composable
+private fun ProbabilityResults(
+    notPullingProbability: String,
+    pullingProbability: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(stringResource(Res.string.not_pulling_probability_text))
+        Text(
+            text = stringResource(Res.string.not_pulling_probability_value, notPullingProbability),
+            modifier = Modifier.testTag("notPullingProbabilityValue"),
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        Text(stringResource(Res.string.pulling_probability_text))
+        Text(
+            text = stringResource(Res.string.pulling_probability_value, pullingProbability),
+            modifier = Modifier.testTag("pullingProbabilityValue"),
+        )
     }
 }

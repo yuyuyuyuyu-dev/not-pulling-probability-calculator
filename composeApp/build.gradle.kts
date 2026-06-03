@@ -27,64 +27,47 @@ spotless {
 }
 
 detekt {
-    source.setFrom(
-        "src/commonMain/kotlin",
-        "src/androidMain/kotlin",
-        "src/jsMain/kotlin",
-        "src/jvmMain/kotlin",
-        "src/wasmJsMain/kotlin",
-    )
+    // Start from detekt's bundled default rule set; config/detekt/detekt.yml only
+    // records deltas (rules we turn off to defer to ktlint, plus Compose tweaks).
     config.setFrom(rootProject.files("config/detekt/detekt.yml"))
-    buildUponDefaultConfig = false
+    buildUponDefaultConfig = true
     allRules = false
     parallel = true
-    basePath.set(rootDir)
-    failOnSeverity = dev.detekt.gradle.extensions.FailOnSeverity.Warning
+    basePath = rootDir
 }
 
 tasks.withType<dev.detekt.gradle.Detekt>().configureEach {
-    jvmTarget.set("11")
+    jvmTarget = "11"
+    // Never lint generated sources (KSP output, compose resource accessors, etc.).
+    // Their source roots live *under* build/, so a relative glob can't catch them;
+    // filter by absolute path instead.
+    val buildPath =
+        layout.buildDirectory
+            .get()
+            .asFile.path
+    exclude { it.file.path.startsWith(buildPath) }
     reports {
         sarif.required.set(true)
         markdown.required.set(true)
-    }
-    if (name == "detektDebugAndroid") {
-        exclude(
-            "**/Platform.android.kt",
-            "**/di/AppComponent.android.kt",
-            "**/androidMainResourceCollectors/**",
-            "**/ActualResourceCollectors.kt",
-            "**/ExpectResourceCollectors.kt",
-        )
-    }
-    if (name == "detektMainJvm") {
-        exclude(
-            "**/Platform.jvm.kt",
-            "**/di/AppComponent.jvm.kt",
-            "**/jvmMainResourceCollectors/**",
-            "**/ActualResourceCollectors.kt",
-            "**/ExpectResourceCollectors.kt",
-        )
+        html.required.set(true)
     }
 }
 
 tasks.withType<dev.detekt.gradle.DetektCreateBaselineTask>().configureEach {
-    jvmTarget.set("11")
+    jvmTarget = "11"
 }
 
-val unusedCodeCheck by tasks.registering {
+// Aggregate task: runs detekt with type resolution for every compilation/target.
+// Type resolution gives the fullest analysis (needed by several detekt rules and
+// the Compose rules).
+val detektAll by tasks.registering {
     group = "verification"
-    description = "Runs detekt checks for unused production Kotlin code."
+    description = "Runs detekt analysis (with type resolution) across all targets."
     dependsOn(
-        "detekt",
-        "detektCommonMainSourceSet",
-        "detektWebMainSourceSet",
-        "detektAndroidMainSourceSet",
-        "detektJsMainSourceSet",
-        "detektJvmMainSourceSet",
-        "detektWasmJsMainSourceSet",
         "detektDebugAndroid",
         "detektMainJvm",
+        "detektJsMainSourceSet",
+        "detektWasmJsMainSourceSet",
     )
 }
 
@@ -188,6 +171,7 @@ compose.desktop {
 }
 
 dependencies {
+    detektPlugins(libs.compose.rules.detekt)
     debugImplementation(libs.compose.uiTooling)
     add("kspCommonMainMetadata", libs.kotlin.inject.compiler)
     add("kspAndroid", libs.kotlin.inject.compiler)

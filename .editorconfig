@@ -1,3 +1,3 @@
 [*.{kt,kts}]
+# @Composable functions are PascalCase; don't flag them as bad function names.
 ktlint_function_naming_ignore_when_annotated_with=Composable
-ktlint_standard_no-wildcard-imports=disabled
