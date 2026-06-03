@@ -10,7 +10,6 @@ import dev.yuyuyuyuyu.notpullingprobabilitycalculator.di.createAppComponent
 import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.main.MainScreen
 
 @Composable
-@Preview
 fun App() {
     val appComponent = remember { createAppComponent() }
 
@@ -19,4 +18,10 @@ fun App() {
             MainScreen()
         }
     }
+}
+
+@Composable
+@Preview
+private fun AppPreview() {
+    App()
 }

@@ -1,6 +1,7 @@
 package dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.main
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
@@ -11,7 +12,7 @@ import dev.yuyuyuyuyu.notpullingprobabilitycalculator.ui.openSourceLicenses.Open
 
 @Composable
 fun MainNavigation(
-    backStack: MutableList<MainNavigationRoute>,
+    backStack: SnapshotStateList<MainNavigationRoute>,
     modifier: Modifier = Modifier,
 ) {
     NavDisplay(

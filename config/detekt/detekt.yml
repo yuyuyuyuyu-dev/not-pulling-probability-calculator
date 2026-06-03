@@ -19,6 +19,10 @@ style:
   MagicNumber:
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
+  # @Preview functions are tooling entry points, not dead code, even when private
+  # (which the Compose PreviewPublic rule requires them to be).
+  UnusedPrivateFunction:
+    ignoreAnnotated: ['Preview']
 
 naming:
   # @Composable functions are PascalCase by convention.

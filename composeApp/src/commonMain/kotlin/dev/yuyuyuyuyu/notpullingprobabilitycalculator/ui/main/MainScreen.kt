@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSerializable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
@@ -20,7 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
-    val backStack: MutableList<MainNavigationRoute> =
+    val backStack: SnapshotStateList<MainNavigationRoute> =
         rememberSerializable(serializer = SnapshotStateListSerializer()) {
             mutableStateListOf(MainNavigationRoute.NotPullingProbabilityCalculator)
         }
