@@ -131,18 +131,21 @@ kotlin {
 android {
     namespace = "dev.yuyuyuyuyu.notpullingprobabilitycalculator"
     compileSdk =
-        libs.versions.android.compileSdk
+        providers
+            .gradleProperty("sdk.compile")
             .get()
             .toInt()
 
     defaultConfig {
         applicationId = "dev.yuyuyuyuyu.notpullingprobabilitycalculator"
         minSdk =
-            libs.versions.android.minSdk
+            providers
+                .gradleProperty("sdk.min")
                 .get()
                 .toInt()
         targetSdk =
-            libs.versions.android.targetSdk
+            providers
+                .gradleProperty("sdk.target")
                 .get()
                 .toInt()
         versionCode = 1
