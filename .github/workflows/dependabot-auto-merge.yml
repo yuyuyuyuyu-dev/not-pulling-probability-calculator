@@ -1,0 +1,24 @@
+name: Dependabot auto-merge
+
+# Turns on GitHub's native auto-merge for Dependabot PRs as soon as they open,
+# so they merge automatically once the required checks pass. Branch protection
+# still applies, and with the merge queue enabled the PR is rebased and
+# re-tested against the latest main before it lands. No human review is required
+# (this is the "auto-merge on green CI" trial variant).
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Auto-merge
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Enable auto-merge
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
