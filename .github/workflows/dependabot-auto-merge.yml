@@ -2,9 +2,9 @@ name: Dependabot auto-merge
 
 # Turns on GitHub's native auto-merge for Dependabot PRs as soon as they open,
 # so they merge automatically once the required checks pass. Branch protection
-# still applies, and with the merge queue enabled the PR is rebased and
-# re-tested against the latest main before it lands. No human review is required
-# (this is the "auto-merge on green CI" trial variant).
+# still applies (including "up to date with main"), so if the PR falls behind,
+# Dependabot rebases it and CI re-runs before it lands. No human review is
+# required (this is the "auto-merge on green CI" trial variant).
 on: pull_request
 
 permissions:
