@@ -7,6 +7,26 @@ on:
     branches: [ "main" ]
 
 jobs:
+  actionlint:
+    name: Actionlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # actionlint has no first-party GitHub Action, so its authors recommend the
+      # download script. Fetching the latest release each run keeps this current
+      # without a pinned version for Dependabot to bump, and the binary exits
+      # non-zero on findings so lint errors fail the job.
+      - name: Download actionlint
+        id: actionlint
+        run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+
+      - name: Lint workflow files
+        run: ${{ steps.actionlint.outputs.executable }} -color
+
   format:
     name: Format
     runs-on: ubuntu-latest
