@@ -44,7 +44,7 @@ jobs:
 
       # Spotless runs Prettier (web + TOML formatting) via Node/npm.
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
 
