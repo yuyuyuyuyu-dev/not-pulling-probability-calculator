@@ -51,16 +51,9 @@ jobs:
           # Push and PR creation must use the PAT, not GITHUB_TOKEN, so CI runs.
           token: ${{ secrets.LOCKFILE_PR_TOKEN }}
 
-      - name: Setup JDK
+      - name: Setup build
         if: steps.guard.outputs.skip == 'false'
-        uses: actions/setup-java@v5
-        with:
-          java-version: "21"
-          distribution: "jetbrains"
-
-      - name: Setup Gradle
-        if: steps.guard.outputs.skip == 'false'
-        uses: gradle/actions/setup-gradle@v6
+        uses: ./.github/actions/setup-build
 
       # kotlinUpgradeYarnLock on its own only reconciles the stored lockfile with
       # the declared dependencies; kotlinRestoreYarnLock copies it into build/ first
