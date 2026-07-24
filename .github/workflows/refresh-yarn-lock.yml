@@ -1,0 +1,98 @@
+name: Refresh yarn.lock
+
+# Dependabot cannot update kotlin-js-store/yarn.lock: the Kotlin Gradle Plugin
+# generates it and there is no package.json for the npm ecosystem to track. This
+# job refreshes it daily so security fixes released within the existing version
+# ranges get picked up, mirroring Dependabot's daily / one-PR-at-a-time cadence.
+on:
+  schedule:
+    - cron: "0 0 * * *" # daily, 00:00 UTC
+  workflow_dispatch:
+
+# Serialize scheduled and manual runs so two of them cannot race to push the
+# same branch. Let an in-flight run finish rather than cancelling it.
+concurrency:
+  group: refresh-yarn-lock
+  cancel-in-progress: false
+
+# Every step authenticates with LOCKFILE_PR_TOKEN, so the workflow's own
+# GITHUB_TOKEN needs no permissions. A PR opened by GITHUB_TOKEN would not
+# trigger the CI workflow, leaving the required checks forever pending; the PAT
+# is what lets CI run on the PR it opens.
+permissions: {}
+
+jobs:
+  refresh:
+    name: Refresh yarn.lock
+    runs-on: ubuntu-latest
+    steps:
+      # Skip the whole run while a refresh PR is still open, so an in-review PR is
+      # never force-updated and at most one is open at a time (as with Dependabot's
+      # open-pull-requests-limit: 1). The branch protection requires PRs to be up to
+      # date with main, and keeping to a single auto-PR avoids needless rebases.
+      - name: Check for an existing open PR
+        id: guard
+        env:
+          GH_TOKEN: ${{ secrets.LOCKFILE_PR_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          count=$(gh pr list --state open --head chore/refresh-yarn-lock --json number --jq 'length')
+          if [ "$count" -gt 0 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "A refresh PR is already open; skipping this run." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.guard.outputs.skip == 'false'
+        uses: actions/checkout@v7
+        with:
+          # Push and PR creation must use the PAT, not GITHUB_TOKEN, so CI runs.
+          token: ${{ secrets.LOCKFILE_PR_TOKEN }}
+
+      - name: Setup JDK
+        if: steps.guard.outputs.skip == 'false'
+        uses: actions/setup-java@v5
+        with:
+          java-version: "21"
+          distribution: "jetbrains"
+
+      - name: Setup Gradle
+        if: steps.guard.outputs.skip == 'false'
+        uses: gradle/actions/setup-gradle@v6
+
+      # kotlinUpgradeYarnLock on its own only reconciles the stored lockfile with
+      # the declared dependencies; kotlinRestoreYarnLock copies it into build/ first
+      # and yarn then keeps the existing resolutions. Deleting the lockfiles forces a
+      # fresh resolve, which is what actually picks up in-range updates. Regenerating
+      # an unchanged tree is a no-op, so days with no update produce no diff.
+      - name: Refresh lockfiles
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          rm -f kotlin-js-store/yarn.lock kotlin-js-store/wasm/yarn.lock \
+                build/js/yarn.lock build/wasm/yarn.lock
+          ./gradlew kotlinUpgradeYarnLock kotlinWasmUpgradeYarnLock
+
+      - name: Open a PR when the lockfile changed
+        if: steps.guard.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.LOCKFILE_PR_TOKEN }}
+        run: |
+          if git diff --quiet -- kotlin-js-store; then
+            echo "No in-range npm updates today." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c chore/refresh-yarn-lock
+          git add kotlin-js-store
+          git commit -m "chore(deps): refresh yarn.lock to pick up in-range npm updates"
+          # No open PR on this branch is guaranteed by the guard step, so overwriting
+          # any leftover branch from a merged PR is safe.
+          git push --force origin chore/refresh-yarn-lock
+          gh pr create \
+            --base main \
+            --head chore/refresh-yarn-lock \
+            --title "chore(deps): refresh yarn.lock to pick up in-range npm updates" \
+            --body "Automated daily refresh of \`kotlin-js-store/yarn.lock\`, regenerated from a fresh resolve so it picks up npm releases that fit the existing version ranges. Dependabot cannot open this PR: the Kotlin Gradle Plugin generates the lockfile and there is no \`package.json\` for it to track. See \`.github/workflows/refresh-yarn-lock.yml\`."
