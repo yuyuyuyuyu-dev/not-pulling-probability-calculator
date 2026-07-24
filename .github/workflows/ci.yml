@@ -36,20 +36,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'jetbrains'
+      - name: Setup build
+        uses: ./.github/actions/setup-build
 
       # Spotless runs Prettier (web + TOML formatting) via Node/npm.
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
           node-version: '24'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
 
       - name: Check formatting
         run: ./gradlew spotlessCheck
@@ -71,14 +65,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'jetbrains'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+      - name: Setup build
+        uses: ./.github/actions/setup-build
 
       - name: Run detekt
         run: ./gradlew :composeApp:detektAll
@@ -92,14 +80,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'jetbrains'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+      - name: Setup build
+        uses: ./.github/actions/setup-build
 
       - name: Run tests
         run: ./gradlew wasmJsTest
@@ -113,14 +95,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'jetbrains'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+      - name: Setup build
+        uses: ./.github/actions/setup-build
 
       - name: Export Library Definitions
         run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/commonMain/composeResources/files/
