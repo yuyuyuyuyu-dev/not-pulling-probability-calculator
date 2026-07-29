@@ -6,7 +6,11 @@ name: Refresh yarn.lock
 # ranges get picked up, mirroring Dependabot's daily / one-PR-at-a-time cadence.
 on:
   schedule:
-    - cron: "0 0 * * *" # daily, 00:00 UTC
+    # 21:41 UTC = 06:41 JST, so a refresh PR is waiting at the start of the day.
+    # Deliberately not on the hour and away from 00:00 UTC: those slots are the
+    # most contended on Actions, and GitHub delays or silently drops scheduled
+    # runs under load. The first "0 0 * * *" run never fired at all.
+    - cron: "41 21 * * *"
   workflow_dispatch:
 
 # Serialize scheduled and manual runs so two of them cannot race to push the
