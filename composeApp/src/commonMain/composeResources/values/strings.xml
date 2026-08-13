@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">NOT Pulling Probability</string>
-    <string name="open_source_licenses">Open source Licenses</string>
     <string name="odds_label">Odds (unit: %)</string>
     <string name="odds_placeholder">e.g.: 0.75</string>
     <string name="number_of_trials_label">Number of trials (unit: times)</string>
