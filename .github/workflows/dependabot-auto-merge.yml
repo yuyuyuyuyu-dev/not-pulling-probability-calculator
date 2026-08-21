@@ -1,0 +1,61 @@
+name: Dependabot auto-merge
+
+on: pull_request
+
+# Only fetch-metadata uses GITHUB_TOKEN. The flag itself is set with an app
+# token, so nothing here needs write access.
+permissions:
+  pull-requests: read
+
+jobs:
+  auto-merge:
+    name: Auto-merge
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+
+      # A grouped PR reports the largest change it contains, so anything that
+      # turns out to include a major update is left for review.
+      - name: Decide whether to auto-merge
+        id: decide
+        env:
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+        run: |
+          case "$UPDATE_TYPE" in
+            version-update:semver-minor | version-update:semver-patch)
+              echo "merge=true" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "merge=false" >> "$GITHUB_OUTPUT"
+              echo "Leaving a $UPDATE_TYPE update for review." >> "$GITHUB_STEP_SUMMARY"
+              ;;
+          esac
+
+      # GitHub merges as whoever set the flag, and a merge by GITHUB_TOKEN would
+      # not start CI on main, leaving Deploy (workflow_run on CI) unfired. The
+      # credentials come from Dependabot secrets, not Actions secrets: a
+      # Dependabot-triggered run cannot read the latter.
+      #
+      # The token is scoped to pull requests alone, below what the app itself is
+      # granted, because this workflow only records an intent. If the flag turns
+      # out to require merge capability, add permission-contents: write.
+      - name: Mint an app token
+        id: app-token
+        if: steps.decide.outputs.merge == 'true'
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
+          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+          permission-pull-requests: write
+
+      # Sets the flag only. GitHub merges once the required checks pass and the
+      # branch is up to date with main.
+      - name: Set the auto-merge flag
+        if: steps.decide.outputs.merge == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --squash "$PR_URL"
