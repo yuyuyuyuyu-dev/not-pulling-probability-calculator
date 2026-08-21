@@ -38,10 +38,6 @@ jobs:
       # not start CI on main, leaving Deploy (workflow_run on CI) unfired. The
       # credentials come from Dependabot secrets, not Actions secrets: a
       # Dependabot-triggered run cannot read the latter.
-      #
-      # The token is scoped to pull requests alone, below what the app itself is
-      # granted, because this workflow only records an intent. If the flag turns
-      # out to require merge capability, add permission-contents: write.
       - name: Mint an app token
         id: app-token
         if: steps.decide.outputs.merge == 'true'
@@ -49,7 +45,6 @@ jobs:
         with:
           app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
           private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
-          permission-pull-requests: write
 
       # Sets the flag only. GitHub merges once the required checks pass and the
       # branch is up to date with main.
