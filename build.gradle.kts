@@ -12,10 +12,11 @@ plugins {
     alias(libs.plugins.versionCatalogUpdate)
 }
 
-// We use version-catalog-update only to keep libs.versions.toml sorted by key.
-// The catalog holds only versions referenced via version.ref, so the plugin's
-// default pruning is left on: it will flag a version entry that no library or
-// plugin references anymore (build-config scalars live in gradle.properties).
+// The only formatter for libs.versions.toml; Prettier is kept away from it because
+// the two disagree over bundle arrays. Default pruning is left on: the catalog holds
+// only versions referenced via version.ref, so the plugin will drop a version entry
+// that nothing references anymore (build-config scalars live in gradle.properties).
+// End-of-line comments are dropped on format, so annotate an entry on the line above.
 versionCatalogUpdate {
     sortByKey = true
 }
@@ -41,20 +42,5 @@ spotless {
             "**/aboutlibraries.json",
         )
         prettier(providers.gradleProperty("npm.prettier").get())
-    }
-    // TOML (Gradle version catalog): Prettier needs the TOML plugin and parser.
-    format("toml") {
-        target("gradle/libs.versions.toml")
-        prettier(
-            mapOf(
-                "prettier" to providers.gradleProperty("npm.prettier").get(),
-                "prettier-plugin-toml" to providers.gradleProperty("npm.prettierPluginToml").get(),
-            ),
-        ).config(
-            mapOf(
-                "plugins" to listOf("prettier-plugin-toml"),
-                "parser" to "toml",
-            ),
-        )
     }
 }

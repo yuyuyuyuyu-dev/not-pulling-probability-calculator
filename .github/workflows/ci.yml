@@ -39,7 +39,7 @@ jobs:
       - name: Setup build
         uses: ./.github/actions/setup-build
 
-      # Spotless runs Prettier (web + TOML formatting) via Node/npm.
+      # Spotless runs Prettier over the web files via Node/npm.
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
@@ -48,13 +48,13 @@ jobs:
       - name: Check formatting
         run: ./gradlew spotlessCheck
 
-      # spotlessCheck only validates Prettier formatting, not key order, so verify
-      # the version catalog is sorted by running the formatter and checking for diffs.
-      - name: Check version catalog is sorted
+      # Spotless does not cover the version catalog, so run its own formatter and
+      # fail on any diff.
+      - name: Check version catalog formatting
         run: |
           ./gradlew versionCatalogFormat
           git diff --exit-code gradle/libs.versions.toml \
-            || { echo "::error::gradle/libs.versions.toml is not sorted. Run './gradlew versionCatalogFormat' and commit the result."; exit 1; }
+            || { echo "::error::gradle/libs.versions.toml is not formatted. Run './gradlew versionCatalogFormat' and commit the result."; exit 1; }
 
   static-analysis:
     name: Static analysis
