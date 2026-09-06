@@ -19,10 +19,10 @@ concurrency:
   group: refresh-yarn-lock
   cancel-in-progress: false
 
-# Every step authenticates with LOCKFILE_PR_TOKEN, so the workflow's own
-# GITHUB_TOKEN needs no permissions. A PR opened by GITHUB_TOKEN would not
-# trigger the CI workflow, leaving the required checks forever pending; the PAT
-# is what lets CI run on the PR it opens.
+# Every step authenticates with LOCKFILE_PR_TOKEN or the app token, so the
+# workflow's own GITHUB_TOKEN needs no permissions. A PR opened by GITHUB_TOKEN
+# would not trigger the CI workflow, leaving the required checks forever
+# pending; the PAT is what lets CI run on the PR it opens.
 permissions: {}
 
 jobs:
@@ -30,33 +30,13 @@ jobs:
     name: Refresh yarn.lock
     runs-on: ubuntu-latest
     steps:
-      # Skip the whole run while a refresh PR is still open, so an in-review PR is
-      # never force-updated and at most one is open at a time (as with Dependabot's
-      # open-pull-requests-limit: 1). The branch protection requires PRs to be up to
-      # date with main, and keeping to a single auto-PR avoids needless rebases.
-      - name: Check for an existing open PR
-        id: guard
-        env:
-          GH_TOKEN: ${{ secrets.LOCKFILE_PR_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-        run: |
-          count=$(gh pr list --state open --head chore/refresh-yarn-lock --json number --jq 'length')
-          if [ "$count" -gt 0 ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "A refresh PR is already open; skipping this run." >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Checkout
-        if: steps.guard.outputs.skip == 'false'
         uses: actions/checkout@v7
         with:
           # Push and PR creation must use the PAT, not GITHUB_TOKEN, so CI runs.
           token: ${{ secrets.LOCKFILE_PR_TOKEN }}
 
       - name: Setup build
-        if: steps.guard.outputs.skip == 'false'
         uses: ./.github/actions/setup-build
 
       # kotlinUpgradeYarnLock on its own only reconciles the stored lockfile with
@@ -65,16 +45,18 @@ jobs:
       # fresh resolve, which is what actually picks up in-range updates. Regenerating
       # an unchanged tree is a no-op, so days with no update produce no diff.
       - name: Refresh lockfiles
-        if: steps.guard.outputs.skip == 'false'
         run: |
           rm -f kotlin-js-store/yarn.lock kotlin-js-store/wasm/yarn.lock \
                 build/js/yarn.lock build/wasm/yarn.lock
           ./gradlew kotlinUpgradeYarnLock kotlinWasmUpgradeYarnLock
 
-      - name: Open a PR when the lockfile changed
-        if: steps.guard.outputs.skip == 'false'
-        env:
-          GH_TOKEN: ${{ secrets.LOCKFILE_PR_TOKEN }}
+      # The commit is always built on a fresh checkout of the default branch and
+      # force-pushed, so an already open PR is rebased onto main and refreshed to
+      # the newest resolutions in one step. While such a PR is open its updates are
+      # missing from main, so a fresh resolve always differs from what main stores:
+      # no diff here means there is no open PR either, and nothing to do.
+      - name: Push the refreshed lockfile
+        id: refresh
         run: |
           if git diff --quiet -- kotlin-js-store; then
             echo "No in-range npm updates today." >> "$GITHUB_STEP_SUMMARY"
@@ -85,11 +67,48 @@ jobs:
           git switch -c chore/refresh-yarn-lock
           git add kotlin-js-store
           git commit -m "chore(deps): refresh yarn.lock to pick up in-range npm updates"
-          # No open PR on this branch is guaranteed by the guard step, so overwriting
-          # any leftover branch from a merged PR is safe.
           git push --force origin chore/refresh-yarn-lock
-          gh pr create \
-            --base main \
-            --head chore/refresh-yarn-lock \
-            --title "chore(deps): refresh yarn.lock to pick up in-range npm updates" \
-            --body "Automated daily refresh of \`kotlin-js-store/yarn.lock\`, regenerated from a fresh resolve so it picks up npm releases that fit the existing version ranges. Dependabot cannot open this PR: the Kotlin Gradle Plugin generates the lockfile and there is no \`package.json\` for it to track. See \`.github/workflows/refresh-yarn-lock.yml\`."
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # Keeping to a single auto-PR matches Dependabot's open-pull-requests-limit: 1
+      # and leaves the review load unchanged, so an existing one is reused as is.
+      - name: Open a PR when none is open
+        id: pr
+        if: steps.refresh.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.LOCKFILE_PR_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          url=$(gh pr list --state open --head chore/refresh-yarn-lock --json url --jq '.[0].url // empty')
+          if [ -z "$url" ]; then
+            url=$(gh pr create \
+              --base main \
+              --head chore/refresh-yarn-lock \
+              --title "chore(deps): refresh yarn.lock to pick up in-range npm updates" \
+              --body "Automated daily refresh of \`kotlin-js-store/yarn.lock\`, regenerated from a fresh resolve so it picks up npm releases that fit the existing version ranges. Dependabot cannot open this PR: the Kotlin Gradle Plugin generates the lockfile and there is no \`package.json\` for it to track. See \`.github/workflows/refresh-yarn-lock.yml\`.")
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      # GitHub merges as whoever set the flag, and a merge by GITHUB_TOKEN would
+      # not start CI on main, leaving Deploy (workflow_run on CI) unfired. The same
+      # app already merges Dependabot's minor and patch updates, but its credentials
+      # have to exist as Actions secrets as well: the Dependabot secrets this
+      # workflow's counterpart reads are not visible to a scheduled run.
+      - name: Mint an app token
+        id: app-token
+        if: steps.refresh.outputs.pushed == 'true'
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
+          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+
+      # The lockfile only ever moves within the ranges the Kotlin Gradle Plugin
+      # already declares, so there is nothing here for a human to decide. Sets the
+      # flag only: GitHub merges once the required checks pass and the branch is up
+      # to date with main.
+      - name: Set the auto-merge flag
+        if: steps.refresh.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+        run: gh pr merge --auto --squash "$PR_URL"
