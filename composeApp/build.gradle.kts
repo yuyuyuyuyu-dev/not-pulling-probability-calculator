@@ -167,7 +167,28 @@ compose.desktop {
     }
 }
 
+val composeVersion = libs.versions.composeMultiplatform.get()
+val material3Version = libs.versions.material3.get()
+
+check(material3Version.split(".").take(2) == composeVersion.split(".").take(2)) {
+    "material3 $material3Version is not from the Compose Multiplatform $composeVersion line"
+}
+
 dependencies {
+    constraints {
+        listOf(
+            "org.jetbrains.compose.runtime:runtime",
+            "org.jetbrains.compose.ui:ui",
+            "org.jetbrains.compose.foundation:foundation",
+            "org.jetbrains.compose.animation:animation",
+            "org.jetbrains.compose.material:material-ripple",
+            "org.jetbrains.compose.components:components-resources",
+        ).forEach { module ->
+            add("commonMainImplementation", module) {
+                version { reject("($composeVersion,)") }
+            }
+        }
+    }
     detektPlugins(libs.compose.rules.detekt)
     debugImplementation(libs.compose.uiTooling)
     add("kspCommonMainMetadata", libs.kotlin.inject.compiler)
