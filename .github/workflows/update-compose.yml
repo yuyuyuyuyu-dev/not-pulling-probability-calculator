@@ -81,7 +81,11 @@ jobs:
           git apply "$PATCH"
           git add gradle/libs.versions.toml kotlin-js-store
           git commit -m "$TITLE"
-          git push --force origin "$BRANCH"
+          if git fetch --quiet origin "$BRANCH" && [ "$(git rev-parse 'HEAD^{tree}')" = "$(git rev-parse 'FETCH_HEAD^{tree}')" ]; then
+            echo "The open branch already holds this update." >> "$GITHUB_STEP_SUMMARY"
+          else
+            git push --force origin "$BRANCH"
+          fi
 
       - name: Open or update the PR
         id: pr
@@ -93,6 +97,7 @@ jobs:
           url=$(gh pr list --state open --head "$BRANCH" --json url --jq '.[0].url // empty')
           if [ -z "$url" ]; then
             url=$(gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "$BODY")
+            echo "created=true" >> "$GITHUB_OUTPUT"
           else
             gh pr edit "$url" --title "$TITLE" --body "$BODY"
           fi
@@ -100,12 +105,14 @@ jobs:
 
       - name: Mint an app token
         id: app-token
+        if: steps.pr.outputs.created == 'true'
         uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
           private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
 
       - name: Set the auto-merge flag
+        if: steps.pr.outputs.created == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           PR_URL: ${{ steps.pr.outputs.url }}
