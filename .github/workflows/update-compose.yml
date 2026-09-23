@@ -1,0 +1,112 @@
+name: Update Compose Multiplatform
+
+on:
+  schedule:
+    - cron: "17 21 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: update-compose
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  resolve:
+    name: Resolve versions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      changed: ${{ steps.select.outputs.changed }}
+      compose: ${{ steps.select.outputs.compose }}
+      material3: ${{ steps.select.outputs.material3 }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Select versions
+        id: select
+        run: python3 .github/scripts/select_compose_versions.py
+
+      - name: Setup build
+        if: steps.select.outputs.changed == 'true'
+        uses: ./.github/actions/setup-build
+
+      - name: Update lockfiles
+        if: steps.select.outputs.changed == 'true'
+        run: ./gradlew kotlinUpgradeYarnLock kotlinWasmUpgradeYarnLock
+
+      - name: Save the update
+        if: steps.select.outputs.changed == 'true'
+        run: git diff --binary -- gradle/libs.versions.toml kotlin-js-store > compose-update.patch
+
+      - name: Upload the update
+        if: steps.select.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: compose-update
+          path: compose-update.patch
+
+  open-pr:
+    name: Open pull request
+    needs: resolve
+    if: needs.resolve.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    permissions: {}
+    env:
+      BRANCH: chore/update-compose
+      TITLE: "build(deps): update Compose Multiplatform to ${{ needs.resolve.outputs.compose }} and material3 to ${{ needs.resolve.outputs.material3 }}"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.LOCKFILE_PR_TOKEN }}
+
+      - name: Download the update
+        uses: actions/download-artifact@v8
+        with:
+          name: compose-update
+          path: ${{ runner.temp }}/compose-update
+
+      - name: Push the update
+        env:
+          PATCH: ${{ runner.temp }}/compose-update/compose-update.patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git apply "$PATCH"
+          git add gradle/libs.versions.toml kotlin-js-store
+          git commit -m "$TITLE"
+          git push --force origin "$BRANCH"
+
+      - name: Open or update the PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.LOCKFILE_PR_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          BODY: "Automated update of Compose Multiplatform to the newest stable release, together with the newest material3 in the same line whose declared Compose Multiplatform requirements do not exceed that release. Dependabot leaves both alone because it cannot keep them paired. See `.github/workflows/update-compose.yml`."
+        run: |
+          url=$(gh pr list --state open --head "$BRANCH" --json url --jq '.[0].url // empty')
+          if [ -z "$url" ]; then
+            url=$(gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "$BODY")
+          else
+            gh pr edit "$url" --title "$TITLE" --body "$BODY"
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Mint an app token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
+          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+
+      - name: Set the auto-merge flag
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+        run: gh pr merge --auto --squash "$PR_URL"
