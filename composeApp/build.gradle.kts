@@ -169,26 +169,36 @@ compose.desktop {
 
 val composeVersion = libs.versions.composeMultiplatform.get()
 val material3Version = libs.versions.material3.get()
+val composeLine = composeVersion.split(".").take(2)
+val nextComposeLine = "${composeLine[0]}.${composeLine[1].toInt() + 1}"
+val composeLockstepGroups =
+    setOf(
+        "org.jetbrains.compose.runtime",
+        "org.jetbrains.compose.ui",
+        "org.jetbrains.compose.foundation",
+        "org.jetbrains.compose.animation",
+        "org.jetbrains.compose.material",
+        "org.jetbrains.compose.components",
+    )
 
-check(material3Version.split(".").take(2) == composeVersion.split(".").take(2)) {
+check(material3Version.split(".").take(2) == composeLine) {
     "material3 $material3Version is not from the Compose Multiplatform $composeVersion line"
 }
 
-dependencies {
-    constraints {
-        listOf(
-            "org.jetbrains.compose.runtime:runtime",
-            "org.jetbrains.compose.ui:ui",
-            "org.jetbrains.compose.foundation:foundation",
-            "org.jetbrains.compose.animation:animation",
-            "org.jetbrains.compose.material:material-ripple",
-            "org.jetbrains.compose.components:components-resources",
-        ).forEach { module ->
-            add("commonMainImplementation", module) {
-                version { reject("($composeVersion,)") }
+dependencies.components.all {
+    allVariants {
+        withDependencies {
+            forEach { dependency ->
+                when (dependency.group) {
+                    in composeLockstepGroups -> dependency.version { reject("($composeVersion,)") }
+                    "org.jetbrains.compose.material3" -> dependency.version { reject("[$nextComposeLine,)") }
+                }
             }
         }
     }
+}
+
+dependencies {
     detektPlugins(libs.compose.rules.detekt)
     debugImplementation(libs.compose.uiTooling)
     add("kspCommonMainMetadata", libs.kotlin.inject.compiler)
