@@ -11,6 +11,9 @@ concurrency:
 
 permissions: {}
 
+env:
+  BRANCH: chore/update-compose
+
 jobs:
   resolve:
     name: Resolve versions
@@ -50,6 +53,24 @@ jobs:
           name: compose-update
           path: compose-update.patch
 
+  close-stale-pr:
+    name: Close the stale pull request
+    needs: resolve
+    if: needs.resolve.outputs.changed == 'false'
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Close the PR when main already has the update
+        env:
+          GH_TOKEN: ${{ secrets.LOCKFILE_PR_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          REASON: "Closing because main already uses Compose Multiplatform ${{ needs.resolve.outputs.compose }} and material3 ${{ needs.resolve.outputs.material3 }}, so this update is no longer needed."
+        run: |
+          url=$(gh pr list --state open --head "$BRANCH" --json url --jq '.[0].url // empty')
+          if [ -n "$url" ]; then
+            gh pr close "$url" --delete-branch --comment "$REASON"
+          fi
+
   open-pr:
     name: Open pull request
     needs: resolve
@@ -57,7 +78,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions: {}
     env:
-      BRANCH: chore/update-compose
       TITLE: "build(deps): update Compose Multiplatform to ${{ needs.resolve.outputs.compose }} and material3 to ${{ needs.resolve.outputs.material3 }}"
     steps:
       - name: Checkout
