@@ -6,14 +6,7 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 1
     ignore:
-      - dependency-name: "org.jetbrains.compose"
-      - dependency-name: "org.jetbrains.compose.runtime:*"
-      - dependency-name: "org.jetbrains.compose.ui:*"
-      - dependency-name: "org.jetbrains.compose.foundation:*"
-      - dependency-name: "org.jetbrains.compose.animation:*"
-      - dependency-name: "org.jetbrains.compose.material:*"
-      - dependency-name: "org.jetbrains.compose.components:*"
-      - dependency-name: "org.jetbrains.compose.material3:material3"
+      - dependency-name: "org.jetbrains.compose*"
     groups:
       minor-and-patch:
         patterns:

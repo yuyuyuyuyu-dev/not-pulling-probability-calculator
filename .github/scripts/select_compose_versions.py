@@ -6,14 +6,10 @@ import urllib.request
 
 MAVEN = "https://repo1.maven.org/maven2"
 CATALOG = "gradle/libs.versions.toml"
-LOCKSTEP_GROUPS = {
-    "org.jetbrains.compose.runtime",
-    "org.jetbrains.compose.ui",
-    "org.jetbrains.compose.foundation",
-    "org.jetbrains.compose.animation",
-    "org.jetbrains.compose.material",
-    "org.jetbrains.compose.components",
-}
+COMPOSE_GROUP = "org.jetbrains.compose"
+MATERIAL3_GROUP = "org.jetbrains.compose.material3"
+COMPOSE_KEY = "composeMultiplatform"
+MATERIAL3_KEY = "material3"
 QUALIFIER_RANKS = {"alpha": 0, "beta": 1, "rc": 2}
 
 
@@ -49,6 +45,10 @@ def latest_stable_compose():
     return max(stable, key=parse)
 
 
+def is_compose_group(group):
+    return group == COMPOSE_GROUP or group.startswith(f"{COMPOSE_GROUP}.")
+
+
 def required_compose(material3):
     module = json.loads(
         fetch(f"{MAVEN}/org/jetbrains/compose/material3/material3/{material3}/material3-{material3}.module")
@@ -56,9 +56,10 @@ def required_compose(material3):
     required = []
     for variant in module["variants"]:
         for dependency in variant.get("dependencies", []):
-            if dependency["group"] not in LOCKSTEP_GROUPS:
+            group = dependency["group"]
+            if not is_compose_group(group) or group == MATERIAL3_GROUP or group.startswith(f"{MATERIAL3_GROUP}."):
                 continue
-            constraint = dependency["version"]
+            constraint = dependency.get("version", {})
             version = constraint.get("strictly") or constraint.get("requires") or constraint.get("prefers")
             if version is None or parse(version) is None:
                 sys.exit(f"material3 {material3} declares {dependency['group']}:{dependency['module']} as {constraint}")
@@ -84,6 +85,27 @@ def paired_material3(compose):
     sys.exit(f"No material3 in the {'.'.join(map(str, line_of(compose)))} line works with Compose Multiplatform {compose}")
 
 
+def catalog_problems(catalog):
+    problems = []
+    for line in catalog.splitlines():
+        entry = re.fullmatch(r"\s*[\w.-]+\s*=\s*\{(.*)\}\s*", line)
+        if entry is None:
+            continue
+        fields = dict(re.findall(r'([\w.]+)\s*=\s*"([^"]*)"', entry.group(1)))
+        coordinate = fields.get("module") or fields.get("id")
+        if coordinate is None:
+            continue
+        group = coordinate.split(":")[0]
+        ref = fields.get("version.ref")
+        if is_compose_group(group):
+            expected = MATERIAL3_KEY if group == MATERIAL3_GROUP else COMPOSE_KEY
+            if ref != expected:
+                problems.append(f"{coordinate} must use version.ref {expected} so that this workflow owns it")
+        elif ref in (COMPOSE_KEY, MATERIAL3_KEY):
+            problems.append(f"{coordinate} must not use version.ref {ref}, which this workflow owns")
+    return problems
+
+
 def catalog_version(catalog, key):
     match = re.search(rf'^{re.escape(key)} = "([^"]+)"$', catalog, re.MULTILINE)
     if match is None or parse(match.group(1)) is None:
@@ -107,14 +129,17 @@ def write_outputs(outputs):
 def main():
     with open(CATALOG) as file:
         catalog = file.read()
-    current_compose = catalog_version(catalog, "composeMultiplatform")
-    current_material3 = catalog_version(catalog, "material3")
+    problems = catalog_problems(catalog)
+    if problems:
+        sys.exit("\n".join(problems))
+    current_compose = catalog_version(catalog, COMPOSE_KEY)
+    current_material3 = catalog_version(catalog, MATERIAL3_KEY)
     compose = max(current_compose, latest_stable_compose(), key=parse)
     material3 = paired_material3(compose)
     changed = (compose, material3) != (current_compose, current_material3)
     if changed:
-        catalog = with_version(catalog, "composeMultiplatform", compose)
-        catalog = with_version(catalog, "material3", material3)
+        catalog = with_version(catalog, COMPOSE_KEY, compose)
+        catalog = with_version(catalog, MATERIAL3_KEY, material3)
         with open(CATALOG, "w") as file:
             file.write(catalog)
     write_outputs({"changed": str(changed).lower(), "compose": compose, "material3": material3})
