@@ -58,18 +58,33 @@ jobs:
     needs: resolve
     if: needs.resolve.outputs.changed == 'false'
     runs-on: ubuntu-latest
-    permissions: {}
+    permissions:
+      pull-requests: read
     steps:
-      - name: Close the PR when main already has the update
+      - name: Find the open PR
+        id: find
         env:
-          GH_TOKEN: ${{ secrets.LOCKFILE_PR_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+        run: echo "url=$(gh pr list --state open --head "$BRANCH" --json url --jq '.[0].url // empty')" >> "$GITHUB_OUTPUT"
+
+      - name: Mint a pr-bot token
+        id: app-token
+        if: steps.find.outputs.url != ''
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
+          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Close the PR because main already has the update
+        if: steps.find.outputs.url != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_URL: ${{ steps.find.outputs.url }}
           REASON: "Closing because main already uses Compose Multiplatform ${{ needs.resolve.outputs.compose }} and material3 ${{ needs.resolve.outputs.material3 }}, so this update is no longer needed."
-        run: |
-          url=$(gh pr list --state open --head "$BRANCH" --json url --jq '.[0].url // empty')
-          if [ -n "$url" ]; then
-            gh pr close "$url" --delete-branch --comment "$REASON"
-          fi
+        run: gh pr close "$PR_URL" --delete-branch --comment "$REASON"
 
   open-pr:
     name: Open pull request
@@ -80,10 +95,19 @@ jobs:
     env:
       TITLE: "build(deps): update Compose Multiplatform to ${{ needs.resolve.outputs.compose }} and material3 to ${{ needs.resolve.outputs.material3 }}"
     steps:
+      - name: Mint a pr-bot token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
+          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          token: ${{ secrets.LOCKFILE_PR_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Download the update
         uses: actions/download-artifact@v8
@@ -93,10 +117,13 @@ jobs:
 
       - name: Push the update
         env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
           PATCH: ${{ runner.temp }}/compose-update/compose-update.patch
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          user_id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
           git switch -c "$BRANCH"
           git apply "$PATCH"
           git add gradle/libs.versions.toml kotlin-js-store
@@ -110,7 +137,7 @@ jobs:
       - name: Open or update the PR
         id: pr
         env:
-          GH_TOKEN: ${{ secrets.LOCKFILE_PR_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
           BODY: "Automated update of Compose Multiplatform to the newest stable release, together with the newest material3 in the same line whose declared Compose Multiplatform requirements do not exceed that release. Dependabot leaves both alone because it cannot keep them paired. See `.github/workflows/update-compose.yml`."
         run: |
@@ -122,14 +149,6 @@ jobs:
             gh pr edit "$url" --title "$TITLE" --body "$BODY"
           fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
-
-      - name: Mint an app token
-        id: app-token
-        if: steps.pr.outputs.created == 'true'
-        uses: actions/create-github-app-token@v3
-        with:
-          app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
-          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
 
       - name: Set the auto-merge flag
         if: steps.pr.outputs.created == 'true'
