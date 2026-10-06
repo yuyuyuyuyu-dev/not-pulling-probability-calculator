@@ -5,154 +5,19 @@ on:
     - cron: "17 21 * * *"
   workflow_dispatch:
 
-concurrency:
-  group: update-compose
-  cancel-in-progress: false
-
 permissions: {}
 
-env:
-  BRANCH: chore/update-compose
-
 jobs:
-  resolve:
-    name: Resolve versions
-    runs-on: ubuntu-latest
+  update:
+    name: Update Compose Multiplatform
     permissions:
       contents: read
-    outputs:
-      changed: ${{ steps.select.outputs.changed }}
-      compose: ${{ steps.select.outputs.compose }}
-      material3: ${{ steps.select.outputs.material3 }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-
-      - name: Select versions
-        id: select
-        run: python3 .github/scripts/select_compose_versions.py
-
-      - name: Setup build
-        if: steps.select.outputs.changed == 'true'
-        uses: ./.github/actions/setup-build
-
-      - name: Update lockfiles
-        if: steps.select.outputs.changed == 'true'
-        run: ./gradlew kotlinUpgradeYarnLock kotlinWasmUpgradeYarnLock
-
-      - name: Save the update
-        if: steps.select.outputs.changed == 'true'
-        run: git diff --binary -- gradle/libs.versions.toml kotlin-js-store > compose-update.patch
-
-      - name: Upload the update
-        if: steps.select.outputs.changed == 'true'
-        uses: actions/upload-artifact@v7
-        with:
-          name: compose-update
-          path: compose-update.patch
-
-  close-stale-pr:
-    name: Close the stale pull request
-    needs: resolve
-    if: needs.resolve.outputs.changed == 'false'
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    steps:
-      - name: Find the open PR
-        id: find
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: echo "url=$(gh pr list --state open --head "$BRANCH" --json url --jq '.[0].url // empty')" >> "$GITHUB_OUTPUT"
-
-      - name: Mint a pr-bot token
-        id: app-token
-        if: steps.find.outputs.url != ''
-        uses: actions/create-github-app-token@v3
-        with:
-          app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
-          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
-          permission-contents: write
-          permission-pull-requests: write
-
-      - name: Close the PR because main already has the update
-        if: steps.find.outputs.url != ''
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          PR_URL: ${{ steps.find.outputs.url }}
-          REASON: "Closing because main already uses Compose Multiplatform ${{ needs.resolve.outputs.compose }} and material3 ${{ needs.resolve.outputs.material3 }}, so this update is no longer needed."
-        run: gh pr close "$PR_URL" --delete-branch --comment "$REASON"
-
-  open-pr:
-    name: Open pull request
-    needs: resolve
-    if: needs.resolve.outputs.changed == 'true'
-    runs-on: ubuntu-latest
-    permissions: {}
-    env:
-      TITLE: "build(deps): update Compose Multiplatform to ${{ needs.resolve.outputs.compose }} and material3 to ${{ needs.resolve.outputs.material3 }}"
-    steps:
-      - name: Mint a pr-bot token
-        id: app-token
-        uses: actions/create-github-app-token@v3
-        with:
-          app-id: ${{ secrets.AUTO_MERGE_APP_ID }}
-          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
-          permission-contents: write
-          permission-pull-requests: write
-
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-
-      - name: Download the update
-        uses: actions/download-artifact@v8
-        with:
-          name: compose-update
-          path: ${{ runner.temp }}/compose-update
-
-      - name: Push the update
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
-          PATCH: ${{ runner.temp }}/compose-update/compose-update.patch
-        run: |
-          user_id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)
-          git config user.name "${APP_SLUG}[bot]"
-          git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
-          git switch -c "$BRANCH"
-          git apply "$PATCH"
-          git add gradle/libs.versions.toml kotlin-js-store
-          git commit -m "$TITLE"
-          if git fetch --quiet origin "$BRANCH" && [ "$(git rev-parse 'HEAD^{tree}')" = "$(git rev-parse 'FETCH_HEAD^{tree}')" ]; then
-            echo "The open branch already holds this update." >> "$GITHUB_STEP_SUMMARY"
-          else
-            git push --force origin "$BRANCH"
-          fi
-
-      - name: Open or update the PR
-        id: pr
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          GH_REPO: ${{ github.repository }}
-          BODY: "Automated update of Compose Multiplatform to the newest stable release, together with the newest material3 in the same line whose declared Compose Multiplatform requirements do not exceed that release. Dependabot leaves both alone because it cannot keep them paired. See `.github/workflows/update-compose.yml`."
-        run: |
-          url=$(gh pr list --state open --head "$BRANCH" --json url --jq '.[0].url // empty')
-          if [ -z "$url" ]; then
-            url=$(gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "$BODY")
-            echo "created=true" >> "$GITHUB_OUTPUT"
-          else
-            gh pr edit "$url" --title "$TITLE" --body "$BODY"
-          fi
-          echo "url=$url" >> "$GITHUB_OUTPUT"
-
-      - name: Set the auto-merge flag
-        if: steps.pr.outputs.created == 'true'
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          PR_URL: ${{ steps.pr.outputs.url }}
-        run: gh pr merge --auto --squash "$PR_URL"
+    uses: yuyuyuyuyu-dev/update-compose-multiplatform/.github/workflows/update-compose-multiplatform.yml@d03bf1a63ccee1ad20e9ff7e4a6ab92f6fbd1c6b
+    with:
+      update-js-yarn-lock: true
+      update-wasm-yarn-lock: true
+      jdk-distribution-to-update-yarn-lock: jetbrains
+      jdk-version-to-update-yarn-lock: "21"
+      app-client-id: ${{ vars.PR_BOT_CLIENT_ID }}
+    secrets:
+      app-private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
