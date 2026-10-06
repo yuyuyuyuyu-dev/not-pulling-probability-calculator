@@ -22,5 +22,6 @@ jobs:
       jdk-distribution-to-update-yarn-lock: jetbrains
       jdk-version-to-update-yarn-lock: "21"
       app-client-id: ${{ vars.PR_BOT_CLIENT_ID }}
+      auto-merge: squash
     secrets:
       app-private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
