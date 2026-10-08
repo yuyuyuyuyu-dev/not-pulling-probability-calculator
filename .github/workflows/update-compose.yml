@@ -15,7 +15,7 @@ jobs:
     name: Update Compose Multiplatform
     permissions:
       contents: read
-    uses: yuyuyuyuyu-dev/update-compose-multiplatform/.github/workflows/update-compose-multiplatform.yml@d03bf1a63ccee1ad20e9ff7e4a6ab92f6fbd1c6b
+    uses: yuyuyuyuyu-dev/update-compose-multiplatform/.github/workflows/update-compose-multiplatform.yml@main
     with:
       update-js-yarn-lock: true
       update-wasm-yarn-lock: true
