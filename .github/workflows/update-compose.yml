@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: "17 21 * * *"
   workflow_dispatch:
-  push:
-    branches:
-      - chore/auto-update-compose-and-material3
 
 permissions: {}
 
