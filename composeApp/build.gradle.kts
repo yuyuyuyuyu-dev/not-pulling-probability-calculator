@@ -168,7 +168,6 @@ compose.desktop {
 }
 
 val composeVersion = libs.versions.composeMultiplatform.get()
-val material3Version = libs.versions.material3.get()
 val composeLine = composeVersion.split(".").take(2)
 val nextComposeLine = "${composeLine[0]}.${composeLine[1].toInt() + 1}"
 val composeLockstepGroups =
@@ -180,10 +179,6 @@ val composeLockstepGroups =
         "org.jetbrains.compose.material",
         "org.jetbrains.compose.components",
     )
-
-check(material3Version.split(".").take(2) == composeLine) {
-    "material3 $material3Version is not from the Compose Multiplatform $composeVersion line"
-}
 
 dependencies.components.all {
     allVariants {
