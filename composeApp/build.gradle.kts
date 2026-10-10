@@ -167,32 +167,6 @@ compose.desktop {
     }
 }
 
-val composeVersion = libs.versions.composeMultiplatform.get()
-val composeLine = composeVersion.split(".").take(2)
-val nextComposeLine = "${composeLine[0]}.${composeLine[1].toInt() + 1}"
-val composeLockstepGroups =
-    setOf(
-        "org.jetbrains.compose.runtime",
-        "org.jetbrains.compose.ui",
-        "org.jetbrains.compose.foundation",
-        "org.jetbrains.compose.animation",
-        "org.jetbrains.compose.material",
-        "org.jetbrains.compose.components",
-    )
-
-dependencies.components.all {
-    allVariants {
-        withDependencies {
-            forEach { dependency ->
-                when (dependency.group) {
-                    in composeLockstepGroups -> dependency.version { reject("($composeVersion,)") }
-                    "org.jetbrains.compose.material3" -> dependency.version { reject("[$nextComposeLine,)") }
-                }
-            }
-        }
-    }
-}
-
 dependencies {
     detektPlugins(libs.compose.rules.detekt)
     debugImplementation(libs.compose.uiTooling)
