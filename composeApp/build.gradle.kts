@@ -9,25 +9,24 @@ plugins {
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.ksp)
     alias(libs.plugins.composePwa)
-    alias(libs.plugins.spotless)
+    alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
 }
 
-spotless {
-    kotlin {
-        target("**/*.kt")
-        targetExclude("**/build/**/*.kt")
-        ktlint()
-    }
-    kotlinGradle {
-        target("*.gradle.kts")
-        ktlint()
+ktlint {
+    filter {
+        val buildPath =
+            layout.buildDirectory
+                .get()
+                .asFile.path
+        exclude { it.file.path.startsWith(buildPath) }
     }
 }
 
 detekt {
     // Start from detekt's bundled default rule set; config/detekt/detekt.yml only
     // records deltas (rules we turn off to defer to ktlint, plus Compose tweaks).
+    source.setFrom("src")
     config.setFrom(rootProject.files("config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
     allRules = false
@@ -54,20 +53,6 @@ tasks.withType<dev.detekt.gradle.Detekt>().configureEach {
 
 tasks.withType<dev.detekt.gradle.DetektCreateBaselineTask>().configureEach {
     jvmTarget = "11"
-}
-
-// Aggregate task: runs detekt with type resolution for every compilation/target.
-// Type resolution gives the fullest analysis (needed by several detekt rules and
-// the Compose rules).
-val detektAll by tasks.registering {
-    group = "verification"
-    description = "Runs detekt analysis (with type resolution) across all targets."
-    dependsOn(
-        "detektDebugAndroid",
-        "detektMainJvm",
-        "detektJsMainSourceSet",
-        "detektWasmJsMainSourceSet",
-    )
 }
 
 kotlin {
@@ -159,6 +144,22 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+}
+
+aboutLibraries {
+    export {
+        outputFile = file("src/commonMain/composeResources/files/aboutlibraries.json")
+    }
+}
+
+compose.resources {
+    customDirectory(
+        sourceSetName = "commonMain",
+        directoryProvider =
+            tasks
+                .named("exportLibraryDefinitions")
+                .map { layout.projectDirectory.dir("src/commonMain/composeResources") },
+    )
 }
 
 compose.desktop {
