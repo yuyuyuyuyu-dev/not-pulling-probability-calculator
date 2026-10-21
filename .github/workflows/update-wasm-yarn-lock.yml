@@ -10,7 +10,7 @@ permissions: {}
 jobs:
   update-wasm-yarn-lock:
     name: Update the Wasm yarn.lock
-    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/update-wasm-yarn-lock.yml@feat/shared-workflows
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/update-wasm-yarn-lock.yml@main
     with:
       app-client-id: ${{ vars.PR_BOT_CLIENT_ID }}
     secrets:
