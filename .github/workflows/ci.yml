@@ -2,9 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
 
 jobs:
   actionlint:
@@ -27,49 +33,19 @@ jobs:
       - name: Lint workflow files
         run: ${{ steps.actionlint.outputs.executable }} -color
 
-  format:
-    name: Format
-    runs-on: ubuntu-latest
+  oxfmt:
+    name: Oxfmt
     permissions:
       contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/oxfmt.yml@main
 
-      - name: Setup build
-        uses: ./.github/actions/setup-build
-
-      # Spotless runs Prettier over the web files via Node/npm.
-      - name: Setup Node
-        uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-
-      - name: Check formatting
-        run: ./gradlew spotlessCheck
-
-      # Spotless does not cover the version catalog, so run its own formatter and
-      # fail on any diff.
-      - name: Check version catalog formatting
-        run: |
-          ./gradlew versionCatalogFormat
-          git diff --exit-code gradle/libs.versions.toml \
-            || { echo "::error::gradle/libs.versions.toml is not formatted. Run './gradlew versionCatalogFormat' and commit the result."; exit 1; }
-
-  static-analysis:
-    name: Static analysis
-    runs-on: ubuntu-latest
+  kotlin-lint:
+    name: Kotlin lint
     permissions:
       contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Setup build
-        uses: ./.github/actions/setup-build
-
-      - name: Run detekt
-        run: ./gradlew :composeApp:detektAll
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/kotlin-lint.yml@main
+    with:
+      compose-multiplatform: true
 
   test:
     name: Tests
@@ -77,11 +53,15 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
+      - name: Check out the repository
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-      - name: Setup build
-        uses: ./.github/actions/setup-build
+      - name: Set up the JDK and Gradle
+        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
+        with:
+          compose-multiplatform: true
 
       - name: Run tests
         run: ./gradlew wasmJsTest
@@ -92,14 +72,15 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
+      - name: Check out the repository
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-      - name: Setup build
-        uses: ./.github/actions/setup-build
-
-      - name: Export Library Definitions
-        run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/commonMain/composeResources/files/
+      - name: Set up the JDK and Gradle
+        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
+        with:
+          compose-multiplatform: true
 
       - name: Build
         run: ./gradlew :composeApp:wasmJsBrowserDistribution

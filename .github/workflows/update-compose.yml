@@ -16,10 +16,10 @@ jobs:
     with:
       update-js-yarn-lock: true
       update-wasm-yarn-lock: true
-      jdk-distribution-to-update-yarn-lock: jetbrains
+      jdk-distribution-to-update-yarn-lock: zulu
       jdk-version-to-update-yarn-lock: "21"
       app-client-id: ${{ vars.PR_BOT_CLIENT_ID }}
       auto-merge: squash
       auto-merge-update-types: minor,patch
     secrets:
-      app-private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+      app-private-key: ${{ secrets.PR_BOT_PRIVATE_KEY }}

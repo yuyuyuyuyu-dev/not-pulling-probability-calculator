@@ -22,15 +22,15 @@ style:
   # @Preview functions are tooling entry points, not dead code, even when private
   # (which the Compose PreviewPublic rule requires them to be).
   UnusedPrivateFunction:
-    ignoreAnnotated: ['Preview']
+    ignoreAnnotated: ["Preview"]
 
 naming:
   # @Composable functions are PascalCase by convention.
   FunctionNaming:
-    ignoreAnnotated: ['Composable']
+    ignoreAnnotated: ["Composable"]
   # Allow PascalCase top-level constants (e.g. compose tokens).
   TopLevelPropertyNaming:
-    constantPattern: '[A-Z][A-Za-z0-9]*'
+    constantPattern: "[A-Z][A-Za-z0-9]*"
 
 complexity:
   # Composables routinely take many parameters, most with defaults.
@@ -38,7 +38,7 @@ complexity:
     ignoreDefaultParameters: true
   # @Preview functions shouldn't count toward a file's function budget.
   TooManyFunctions:
-    ignoreAnnotatedFunctions: ['Preview']
+    ignoreAnnotatedFunctions: ["Preview"]
 
 # Compose rules (io.nlopez.compose.rules:detekt).
 Compose:
