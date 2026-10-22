@@ -43,7 +43,7 @@ jobs:
     name: Kotlin lint
     permissions:
       contents: read
-    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/kotlin-lint.yml@feat/oxfmt-per-repository
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/kotlin-lint.yml@main
     with:
       compose-multiplatform: true
 
@@ -59,7 +59,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up the JDK and Gradle
-        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@feat/oxfmt-per-repository
+        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
         with:
           compose-multiplatform: true
 
@@ -78,7 +78,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up the JDK and Gradle
-        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@feat/oxfmt-per-repository
+        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
         with:
           compose-multiplatform: true
 
