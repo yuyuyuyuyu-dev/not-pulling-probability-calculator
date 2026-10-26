@@ -14,6 +14,7 @@ plugins {
 }
 
 ktlint {
+    version = libs.versions.ktlintCli.get()
     filter {
         val buildPath =
             layout.buildDirectory
@@ -24,35 +25,9 @@ ktlint {
 }
 
 detekt {
-    // Start from detekt's bundled default rule set; config/detekt/detekt.yml only
-    // records deltas (rules we turn off to defer to ktlint, plus Compose tweaks).
     source.setFrom("src")
     config.setFrom(rootProject.files("config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
-    allRules = false
-    parallel = true
-    basePath = rootDir
-}
-
-tasks.withType<dev.detekt.gradle.Detekt>().configureEach {
-    jvmTarget = "11"
-    // Never lint generated sources (KSP output, compose resource accessors, etc.).
-    // Their source roots live *under* build/, so a relative glob can't catch them;
-    // filter by absolute path instead.
-    val buildPath =
-        layout.buildDirectory
-            .get()
-            .asFile.path
-    exclude { it.file.path.startsWith(buildPath) }
-    reports {
-        sarif.required.set(true)
-        markdown.required.set(true)
-        html.required.set(true)
-    }
-}
-
-tasks.withType<dev.detekt.gradle.DetektCreateBaselineTask>().configureEach {
-    jvmTarget = "11"
 }
 
 kotlin {
@@ -169,7 +144,6 @@ compose.desktop {
 }
 
 dependencies {
-    detektPlugins(libs.compose.rules.detekt)
     debugImplementation(libs.compose.uiTooling)
     add("kspCommonMainMetadata", libs.kotlin.inject.compiler)
     add("kspAndroid", libs.kotlin.inject.compiler)
