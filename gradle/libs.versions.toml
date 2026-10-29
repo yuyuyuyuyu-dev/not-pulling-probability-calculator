@@ -1,14 +1,14 @@
 [versions]
 aboutLibraries = "15.3.0"
-agp = "9.2.1"
+agp = "9.5.0"
 androidx-activity = "1.13.0"
-androidx-appcompat = "1.7.1"
-androidx-core = "1.18.0"
+androidx-appcompat = "1.8.0"
+androidx-core = "1.19.1"
 androidx-espresso = "3.7.0"
 androidx-lifecycle = "2.11.0"
 androidx-testExt = "1.3.0"
 composeMultiplatform = "1.12.2"
-composePwa = "0.7.0-alpha03"
+composePwa = "0.7.0"
 detekt = "2.0.0-alpha.6"
 junit = "4.13.2"
 kotlin = "2.4.21"
@@ -19,7 +19,7 @@ ktlint = "14.2.0"
 ktlintCli = "1.8.0"
 material3 = "1.12.0-alpha03"
 myComposables = "0.1.1"
-versionCatalogUpdate = "1.1.1"
+versionCatalogUpdate = "1.1.2"
 
 [libraries]
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
