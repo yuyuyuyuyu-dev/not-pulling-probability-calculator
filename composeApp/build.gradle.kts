@@ -1,9 +1,7 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.aboutLibraries)
@@ -31,34 +29,13 @@ detekt {
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-
-    js {
-        browser()
-        binaries.executable()
-    }
-
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
         binaries.executable()
     }
 
-    jvm {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.activity.compose)
-        }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -76,48 +53,6 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-        }
-    }
-}
-
-android {
-    namespace = "dev.yuyuyuyuyu.notpullingprobabilitycalculator"
-    compileSdk =
-        providers
-            .gradleProperty("sdk.compile")
-            .get()
-            .toInt()
-
-    defaultConfig {
-        applicationId = "dev.yuyuyuyuyu.notpullingprobabilitycalculator"
-        minSdk =
-            providers
-                .gradleProperty("sdk.min")
-                .get()
-                .toInt()
-        targetSdk =
-            providers
-                .gradleProperty("sdk.target")
-                .get()
-                .toInt()
-        versionCode = 1
-        versionName = "1.0"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
@@ -137,17 +72,6 @@ compose.resources {
     )
 }
 
-compose.desktop {
-    application {
-        mainClass = "dev.yuyuyuyuyu.notpullingprobabilitycalculator.MainKt"
-    }
-}
-
 dependencies {
-    debugImplementation(libs.compose.uiTooling)
-    add("kspCommonMainMetadata", libs.kotlin.inject.compiler)
-    add("kspAndroid", libs.kotlin.inject.compiler)
-    add("kspJs", libs.kotlin.inject.compiler)
     add("kspWasmJs", libs.kotlin.inject.compiler)
-    add("kspJvm", libs.kotlin.inject.compiler)
 }
