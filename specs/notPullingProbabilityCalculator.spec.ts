@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test.use({ locale: "ja-JP" });
+test.use({ locale: "en-US" });
 
 test("shows the probabilities for 0.75% odds and 300 trials", async ({ page }) => {
   // Arrange
@@ -14,6 +14,6 @@ test("shows the probabilities for 0.75% odds and 300 trials", async ({ page }) =
 
   // Assert
   await expect(page.locator("body")).toMatchAriaSnapshot(`
-    - text: 一度も引けない確率 約 10.45092258072379 % 少なくとも1回は引ける確率 約 89.54907741927622 % 引けない確率の計算
+    - text: Probability of not pulling at all Approx. 10.45092258072379 % Probability of pulling at least once Approx. 89.54907741927622 % NOT Pulling Probability
   `);
 });
