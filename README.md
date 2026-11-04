@@ -6,3 +6,18 @@
 ## Screenshot
 
 ![non-drawing-probability-calculator vercel app_](https://github.com/user-attachments/assets/5a7da451-c650-4e5e-bf18-78e1bfa1dbe4)
+
+## Tests
+
+Specification tests live in `specs/`. They state what the app must do, and run in a real browser against the built app.
+
+```sh
+npx playwright install chromium
+npm run test:spec
+```
+
+All other tests live in `composeApp/src/commonTest`.
+
+```sh
+./gradlew wasmJsTest
+```
