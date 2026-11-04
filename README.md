@@ -9,14 +9,9 @@
 
 ## Tests
 
-Specification tests live in `specs/`. They state what the app must do, and run in a real browser against the built app.
+Specification tests live in `composeApp/src/specTest`. They state what the app must do, and drive the whole app with the Compose UI test framework. All other tests live in `composeApp/src/commonTest`.
 
-```sh
-npx playwright install chromium
-npm run test:spec
-```
-
-All other tests live in `composeApp/src/commonTest`.
+Both run in a headless browser with:
 
 ```sh
 ./gradlew wasmJsTest
