@@ -54,9 +54,6 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.compose.uiTest)
         }
-        wasmJsTest {
-            kotlin.srcDir("src/specTest/kotlin")
-        }
     }
 }
 

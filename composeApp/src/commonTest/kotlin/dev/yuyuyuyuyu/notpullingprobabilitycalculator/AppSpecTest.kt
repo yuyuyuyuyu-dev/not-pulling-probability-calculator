@@ -11,7 +11,6 @@ import androidx.compose.ui.test.v2.runComposeUiTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -58,13 +57,6 @@ class AppSpecTest {
     }
 }
 
-@OptIn(ExperimentalWasmJsInterop::class)
-private fun useEnglishInBrowser(): Unit =
-    js(
-        """
-        Object.defineProperty(navigator, 'languages', { get: () => ['en-US'], configurable: true })
-        """,
-    )
+expect fun useEnglishInBrowser()
 
-@OptIn(ExperimentalWasmJsInterop::class)
-private fun restoreBrowserLanguage(): Unit = js("delete navigator.languages")
+expect fun restoreBrowserLanguage()
