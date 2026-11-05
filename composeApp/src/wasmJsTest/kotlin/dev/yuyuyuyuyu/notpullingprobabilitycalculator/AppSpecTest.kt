@@ -54,9 +54,20 @@ class AppSpecTest {
 private fun useEnglishInBrowser(): Unit =
     js(
         """
-        Object.defineProperty(navigator, 'languages', { get: () => ['en-US'], configurable: true })
+        {
+            Object.defineProperty(navigator, 'languages', { get: () => ['en-US'], configurable: true });
+            window.dispatchEvent(new Event('languagechange'));
+        }
         """,
     )
 
 @OptIn(ExperimentalWasmJsInterop::class)
-private fun restoreBrowserLanguage(): Unit = js("delete navigator.languages")
+private fun restoreBrowserLanguage(): Unit =
+    js(
+        """
+        {
+            delete navigator.languages;
+            window.dispatchEvent(new Event('languagechange'));
+        }
+        """,
+    )
