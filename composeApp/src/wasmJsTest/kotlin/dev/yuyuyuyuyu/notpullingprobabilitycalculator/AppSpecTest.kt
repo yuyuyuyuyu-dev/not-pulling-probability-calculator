@@ -27,7 +27,7 @@ class AppSpecTest {
     }
 
     @Test
-    fun `shows the probabilities for 0_75 percent odds and 300 trials`() =
+    fun `should show the probabilities for 0_75 percent odds and 300 trials`() =
         runComposeUiTest {
             // Arrange
             setContent { App() }
