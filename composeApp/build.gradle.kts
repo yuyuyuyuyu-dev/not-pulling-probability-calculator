@@ -50,7 +50,7 @@ kotlin {
             implementation(libs.myComposables)
             implementation(libs.kotlin.inject.runtime)
         }
-        commonTest.dependencies {
+        wasmJsTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.compose.uiTest)
         }
