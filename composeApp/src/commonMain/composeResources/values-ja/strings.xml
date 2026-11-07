@@ -1,4 +1,5 @@
 <resources>
+    <string name="language_tag">ja</string>
     <string name="app_name">引けない確率の計算</string>
     <string name="odds_label">排出率（単位：%）</string>
     <string name="odds_placeholder">例：0.75</string>
